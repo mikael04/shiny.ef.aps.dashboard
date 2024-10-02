@@ -1,0 +1,41 @@
+/* Navbar style*/
+.navbar-style{
+  background-color: #0260A6 !important;
+  font-size: larger;
+  margin: 0px !important;
+  heigth: 10vh;
+}
+.navbar-logo-position{
+  display: flex;
+  justify-content: center;
+}
+.navbar-navegacao{
+    padding-left: 10%;
+    padding-right: 10%;
+}
+.logo-svg{
+    width: 80%;
+}
+.navbar-brand{
+    width: 300px;
+    height: 70px;
+}
+.nav-link{
+    color: white !important;
+}
+.btn-navegacao{
+    background-color: #0260A6 !important;
+    margin-right: 1%;
+    margin-left: 1%;
+}
+.current-nav-item {
+  background-color: #FF8A00 !important;
+  font-weight: bolder;
+}
+/* Navbar collapse (botao para telas menores)*/
+#navbarSupportedContent.navbar-collapse{
+    background-color: #0260A6;
+    z-index: 1;
+    text-align: right;
+    padding-right: 2%;
+}

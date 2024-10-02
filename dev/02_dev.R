@@ -17,16 +17,40 @@
 ## Amend DESCRIPTION with dependencies read from package code parsing
 ## install.packages('attachment') # if needed.
 attachment::att_amend_desc()
+# usethis::use_package("bslib") ## UI utilizada
+# usethis::use_package("leaflet") ## Mapa
+# usethis::use_package("shinyWidgets") ## Widgets utilizados
+# usethis::use_package("lubridate") ## Datas
+# usethis::use_package("dplyr") ## Manipulação de dados
+# usethis::use_package("tidyr") ## Manipulação de dados
+# usethis::use_package("data.table") ## Manipulação de dados
+# usethis::use_package("sf") ## Trabalhar com dados geográficos
+# usethis::use_package("here") ## Lidar com diretório de execução
+# usethis::use_package("ggplot2") ## Gráficos
+# usethis::use_package("ggiraph") ## Gráficos interativos
+# usethis::use_package("ggtext") ## Customizar títulos e texto no ggplot2
+# usethis::use_package("patchwork") ## Junção de gráficos
+# usethis::use_package("gt") ## Tabela
+# # usethis::use_package("future") ## Lidando com tasks assíncronas
+# # usethis::use_package("promises") ## Lidando com tasks assíncronas
+# # usethis::use_package("patchwork") ## Lidando com múltiplos gráficos
+# # usethis::use_package("shinycssloaders") ## Lidando com tasks assíncronas (loader gif)
+# usethis::use_package("DBI") ## Conexão com banco de dados
+# usethis::use_package("RPostgreSQL") ## Conexão com banco de dados
+# usethis::use_package("dbplyr") ## Manipulações no SQL usando dplyr
 
-## Add modules ----
+  ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module(name = "name_of_module1", with_test = TRUE) # Name of the module
-golem::add_module(name = "name_of_module2", with_test = TRUE) # Name of the module
+golem::add_module(name = "mapa", with_test = F) # Name of the module
+golem::add_module(name = "filters", with_test = F) # Name of the module
+golem::add_module(name = "graph_lollipop_inputs_outputs", with_test = F) # Name of the module
+golem::add_module(name = "tabela_ef", with_test = F) # Name of the module
+golem::add_module(name = "modal", with_test = F) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
-golem::add_fct("helpers", with_test = TRUE)
-golem::add_utils("helpers", with_test = TRUE)
+golem::add_fct("ui_panel", with_test = F)
+golem::add_utils("db", with_test = F)
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

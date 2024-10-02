@@ -20,12 +20,12 @@
 ##
 golem::fill_desc(
   pkg_name = "shiny.ef.aps.dashboard", # The Name of the package containing the App
-  pkg_title = "PKG_TITLE", # The Title of the package containing the App
-  pkg_description = "PKG_DESC.", # The Description of the package containing the App
-  author_first_name = "AUTHOR_FIRST", # Your First Name
-  author_last_name = "AUTHOR_LAST", # Your Last Name
-  author_email = "AUTHOR@MAIL.COM", # Your Email
-  repo_url = NULL, # The URL of the GitHub Repo (optional),
+  pkg_title = "Eficiencia.APS", # The Title of the package containing the App
+  pkg_description = "Repositório de aplicação Shiny para avaliação de eficiência da APS.", # The Description of the package containing the App
+  author_first_name = "Mikael", # Your First Name
+  author_last_name = "M. Coletto", # Your Last Name
+  author_email = "mikael.coletto.eng@gmail.com", # Your Email
+  repo_url = "https://github.com/mikael04/shiny.ef.aps.dashboard  ", # The URL of the GitHub Repo (optional),
   pkg_version = "0.0.0.9000" # The Version of the package containing the App
 )
 

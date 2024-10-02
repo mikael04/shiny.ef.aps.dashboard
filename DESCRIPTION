@@ -1,0 +1,22 @@
+Package: shiny.ef.aps.dashboard
+Title: Eficiencia.APS
+Version: 0.0.0.9000
+Authors@R: 
+    person("Mikael", "M. Coletto", , "mikael.coletto.eng@gmail.com", role = c("cre", "aut"))
+Description: Repositório de aplicação Shiny para avaliação de eficiência
+    da APS.
+License: What license is it under?
+URL: https://github.com/mikael04/shiny.ef.aps.dashboard
+BugReports: https://github.com/mikael04/shiny.ef.aps.dashboard /issues
+Imports: 
+    config (>= 0.3.2),
+    ggiraph,
+    golem (>= 0.4.1),
+    shiny (>= 1.8.1.1),
+    shinycssloaders
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2

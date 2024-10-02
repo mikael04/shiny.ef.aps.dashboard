@@ -1,0 +1,95 @@
+/* Fonte
+body {
+    font-family: "Inter" !important;
+}*/
+
+/* Arrumando espaçamentos */
+.container-fluid{
+    padding: 0px !important;
+}
+/* Gradiente de background */
+.pageLayout{
+  background-color: #0762AE; /* Para browser q não suportem gradiente */
+  background-image: linear-gradient(#0260A6, #00A0AB);
+  min-height: 100vh;
+}
+
+/* Tamanho da página */
+/* Ajustando espaçamentos */
+.row{
+    margin: 0px;
+}
+/* Imagem da capa */
+.home-capa{
+    background-color: #0762AE; /* Para browser q não suportem gradiente */
+    background-image: linear-gradient(#0059A6, #00A0AB);
+}
+.home-capa-img{
+    width: 70%;
+    display: flex;
+    position: relative;
+    left: 15%;
+}
+/* Sobre */
+.home-sobre-div{
+    padding-left: 20%;
+    padding-right: 20%;
+    text-align: justify;
+}
+.home-sobre-titulo{
+    padding-top: 4%;
+    padding-bottom: 3%;
+    font-size: 20px;
+    font-weight: 800;
+    color: #015AA6;
+    text-align: center;
+}
+.home-sobre-projeto{
+    font-size: 16px;
+    font-weight: 700;
+    color: #015AA6;
+}
+/* Footer Style */
+.footer-style{
+    padding-top: 2%;
+    padding-bottom: 2%;
+    padding-left: 10%;
+    padding-right: 10%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    background-color: #0762AE; /* Para browser q não suportem gradiente */
+    background-image: linear-gradient(#00A0AB);
+    height: 20%;
+}
+/* Espaçamento Geral */
+.body{
+    height: 100vh;
+    width: 100vw;
+    padding-left: 0%;
+    padding-right: 0%;
+}
+/*
+.shiny-input-container{
+    padding-left: 1.5rem !important;
+}*/
+/* Home */
+.home{
+    padding-left: 0;
+}
+
+@media (min-width: 1800px){
+    .home-capa-img{
+        width: 60%;
+        display: flex;
+        position: relative;
+        left: 20%;
+    }
+}
+
+@media (min-width: 2300px){
+    .home-capa-img{
+    }
+}
+
+

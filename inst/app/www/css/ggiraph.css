@@ -1,0 +1,20 @@
+/* ggiraph background transparency
+.ggiraph-svg-bg{
+  fill-opacity: 0 !important;
+  stroke-opacity: 0 !important;
+}
+#graph_lollipop_inputs_1-graph_lollipop_inputs{
+  height: 100%;
+}
+*/
+/* Altura dos gráficos ggiraph */
+.girafe{
+  height: 100% !important;
+}
+.shiny-plot-output{
+  height: 200px !important;
+}
+/* Fonte do ggiraph */
+g > text {
+  font-family: "Open Sans" !important;
+}

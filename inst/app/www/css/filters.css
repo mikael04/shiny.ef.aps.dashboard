@@ -1,0 +1,9 @@
+#sel-1-selectize > div > div > div > div.selectize-input{
+  color: green;
+  font-weight: bold;
+}
+#selector_type_2_mun_regs_sel > div > div > div > div.selectize-input.items.has-options.full.has-items > div{
+  color: #FC6600;
+  font-weight: bold;
+}
+element.style

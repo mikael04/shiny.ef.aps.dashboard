@@ -1,0 +1,101 @@
+/* Margem e padding da página html */
+
+/* Geral */
+.panel-body{
+  /* background-color: #0762AE; /* Para browser q não suportem gradiente */
+  /* background-image: linear-gradient(#0260A6, #00A0AB);
+  /*font-family: "Inter" !important;*/
+  /*text-align: center;*/
+}
+/**************************************************/
+/* Coluna lateral, texto + filtro lateral */
+.column-left{
+}
+/* Filtros laterais */
+.filtro-lateral{
+  color: white;
+  background-color: #00718E;
+  background-image: linear-gradient(#004E97, #016599);
+  border-radius: 10px;
+  padding-top: 1vh;
+  padding-left: 1.5vw;
+  padding-right: 1.5vw;
+}
+/* Cor da seleção inicial de eficiência */
+#left{
+  color: orange;
+}
+/* Alterando a cor do seletor */
+.material-switch>label.switch:after {
+  background: orange !important;
+}
+/* Formato do cursor*/
+#left{
+  cursor: default !important;
+}
+/* Títulos dinâmicos dos gráficos */
+.titles-graph{
+  z-index: 1;
+  text-align: center;
+}
+.title-map{
+  font-size: 1.2vw !important;
+  margin-bottom: -7%;
+}
+.subtitle{
+  font-size: 100%;
+}
+.title-ef{
+  font-size: 3vh;
+  margin-bottom: -4%;
+}
+
+/* Legenda gráfico de entrada e saída */
+.legenda{
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -2vh;
+}
+.nomelegenda{
+  padding-left: 0.3vw !important;
+}
+.dot {
+  height: 1vw;
+  width: 1vw;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 1vw !important;
+  border: 1px solid black;
+}
+.dot1{
+  background-color: #0187A9 !important;
+}
+.dot2{
+  background-color: #014c84 !important;
+}
+.dot3{
+  background-color: #006400 !important;
+}
+.dot4{
+  background-color: #FF8C00 !important;
+}
+/* Modal de avisos*/
+.modal-body{
+  text-align: justify !important;
+}
+/* Botões de aplicar e reiniciar filtros */
+/* Espaçamento entre botões */
+.botoes-aplicar-resetar{
+  margin-top: 3vh;
+}
+
+/* Diminuindo fonte para caber em uma linha */
+.bttn-jelly{
+  font-size: 18px !important;
+}
+.modal-download > .modal > .modal-dialog > .modal-content{
+  width: 150% !important;
+}

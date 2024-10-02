@@ -1,0 +1,19 @@
+# config.yml
+default:
+  golem_name: shiny.ef.aps.dashboard
+  golem_version: 0.0.0.9000
+  app_prod: no
+production:
+  db:
+    host: ${DB_HOST}
+    port: 5432
+    dbname: ${DB_NAME}
+    user: ${DB_USER}
+    password: ${DB_PASSWORD_PROD}
+development:
+  db:
+    host: ${DB_HOST}
+    port: 5432
+    dbname: ${DB_NAME}
+    user: ${DB_USER}
+    password: ${DB_PASSWORD_DEV}

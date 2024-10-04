@@ -24,7 +24,6 @@ Imports:
     here,
     lubridate,
     patchwork,
-    RPostgres,
     RPostgreSQL,
     sf,
     shiny (>= 1.8.1.1),

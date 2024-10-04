@@ -14,7 +14,7 @@ utils_db_connect <- function() {
   db_config <- utils_db_config()
   DBI::dbConnect(
     RPostgres::Postgres(),
-      host = db_config$host,
+    host = db_config$host,
     port = db_config$port,
     dbname = db_config$dbname,
     user = db_config$user,

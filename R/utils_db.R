@@ -13,7 +13,7 @@ utils_db_connect <- function() {
   # Sys.getenv("DB_HOST")
   db_config <- utils_db_config()
   DBI::dbConnect(
-    RPostgres::Postgres(),
+    RPostgreSQL::PostgreSQL(),
     host = db_config$host,
     port = db_config$port,
     dbname = db_config$dbname,

@@ -26,7 +26,7 @@ attachment::att_amend_desc()
 # usethis::use_package("data.table") ## Manipulação de dados
 # usethis::use_package("sf") ## Trabalhar com dados geográficos
 # usethis::use_package("here") ## Lidar com diretório de execução
-# usethis::use_package("ggplot2") ## Gráficos
+usethis::use_package("ggplot2") ## Gráficos
 # usethis::use_package("ggiraph") ## Gráficos interativos
 # usethis::use_package("ggtext") ## Customizar títulos e texto no ggplot2
 # usethis::use_package("patchwork") ## Junção de gráficos
@@ -46,11 +46,57 @@ golem::add_module(name = "filters", with_test = F) # Name of the module
 golem::add_module(name = "graph_lollipop_inputs_outputs", with_test = F) # Name of the module
 golem::add_module(name = "tabela_ef", with_test = F) # Name of the module
 golem::add_module(name = "modal", with_test = F) # Name of the module
+golem::add_module(name = "modal_faixa_cmp", with_test = F) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
+## Transformação de dados
+golem::add_fct("transform_data_rda", with_test = F)
+### Gráficos iniciais
+golem::add_fct("init_dfs_iniciais", with_test = F)
+golem::add_fct("init_grafs", with_test = F)
+
+## UI
 golem::add_fct("ui_panel", with_test = F)
+
+## Server logic
+### Apply & manipulations
+golem::add_fct("applyFilters", with_test = F)
+golem::add_fct("test_if_has_data", with_test = F)
+golem::add_fct("server_mod_tabela_ef", with_test = F)
+golem::add_fct("server_mod_mapa", with_test = F)
+golem::add_fct("server_mod_mapa", with_test = F)
+golem::add_fct("get_ef_mun_data", with_test = F)
+golem::add_fct("server_mod_graph_lollipop_inputs_outputs", with_test = F)
+golem::add_fct("aux_graph_lollipop_input_proc_1", with_test = F)
+golem::add_fct("aux_graph_lollipop_input_proc_2", with_test = F)
+golem::add_fct("aux_graph_lollipop_outputs_proc", with_test = F)
+golem::add_fct("aux_graph_lollipop_input_res_1", with_test = F)
+golem::add_fct("aux_graph_lollipop_input_res_2", with_test = F)
+golem::add_fct("aux_graph_lollipop_outputs_res", with_test = F)
+golem::add_fct("aux_lollipop_patchwork", with_test = F)
+golem::add_fct("create_tooltip_ef", with_test = F)
+### Server UI
+golem::add_fct("selector_type_1", with_test = F)
+golem::add_fct("selector_type_2", with_test = F)
+golem::add_fct("selector_att_type", with_test = F)
+golem::add_fct("cmp_button", with_test = F)
+golem::add_fct("selector_type_cmp_uf_faixa", with_test = F)
+golem::add_fct("search_capital_name", with_test = F)
+golem::add_fct("order_by_ef_sel", with_test = F)
+golem::add_fct("check_has_data", with_test = F)
+golem::add_fct("get_mun_ied", with_test = F)
+golem::add_fct("reset_filters", with_test = F)
+golem::add_fct("reset_graphs", with_test = F)
+golem::add_fct("transform_data_to_download", with_test = F)
+golem::add_fct("download_data", with_test = F)
+
+## DB
+### Conexão
 golem::add_utils("db", with_test = F)
+### Atualização dos dados (usando a transform_data_rda que chama a update_data_PostgreSQL)
+golem::add_fct("update_data_PostgreSQL", with_test = F)
+
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

@@ -1,19 +1,25 @@
-/* Fonte
-body {
-    font-family: "Inter" !important;
-}*/
+/* Fonte */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 
 /* Arrumando espaçamentos */
 .container-fluid{
-    padding: 0px !important;
-}
-/* Gradiente de background */
-.pageLayout{
-  background-color: #0762AE; /* Para browser q não suportem gradiente */
-  background-image: linear-gradient(#0260A6, #00A0AB);
-  min-height: 100vh;
+  padding: 0px !important;
 }
 
+/* Gradiente de background */
+.pageLayout{
+  background-color: #0762AE; /* For browsers that don't support gradients */
+  background-image: linear-gradient(#016AA6       , #009FAA);
+  min-height: 100vh;
+  margin-top: 0;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+}
 /* Tamanho da página */
 /* Ajustando espaçamentos */
 .row{
@@ -48,19 +54,6 @@ body {
     font-size: 16px;
     font-weight: 700;
     color: #015AA6;
-}
-/* Footer Style */
-.footer-style{
-    padding-top: 2%;
-    padding-bottom: 2%;
-    padding-left: 10%;
-    padding-right: 10%;
-    color: white;
-    display: flex;
-    justify-content: center;
-    background-color: #0762AE; /* Para browser q não suportem gradiente */
-    background-image: linear-gradient(#00A0AB);
-    height: 20%;
 }
 /* Espaçamento Geral */
 .body{

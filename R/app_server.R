@@ -251,17 +251,7 @@ app_server <- function(input, output, session) {
                            choices = c("2022", "2023"), selected = "2023")
       title_period = title_period(sel_period_name_ano)
     }
-  }) %...>%
-    (function(result) {
-      shinyalert::closeAlert()
-    }) %...!%
-    (function(error) {
-      shinyalert::shinyalert(
-        title = "Error",
-        text = paste("An error occurred:", error$message),
-        type = "error"
-      )
-    })
+  })
   ## Versão inicial da aplicação dos títulos de mapa e gráfico de eficiência
   ## Atualizando nome do período
   output$title_map <- renderUI({

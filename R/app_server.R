@@ -160,7 +160,7 @@ app_server <- function(input, output, session) {
   ## Modal para avisar que dados estão carregando
   shinyalert::shinyalert(
     html = TRUE,
-    title = "Carregando novos dados...",
+    title = "Carregando painel",
     showConfirmButton = F,
     text = tagList(
       HTML("<div class='loader_data'></div>")
@@ -219,8 +219,6 @@ app_server <- function(input, output, session) {
         mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
                                                  initial_state = T, ef_proc_res = F, list_graphs_inputs_outputs = NULL)
       }
-      ## Fechando modal de carregamento inicial
-      shinyalert::closeAlert()
       ## Senão for a versão inicial da aplicação, apresentar popup para troca
     }else{
       ## Alterando o título dos gráficos de eficiência
@@ -359,6 +357,8 @@ app_server <- function(input, output, session) {
         })
       }
     }
+    ## Fechando modal de carregamento inicial
+    shinyalert::closeAlert()
   })
 
   # 3. Aplicar (aplicando filtros reativos) ----

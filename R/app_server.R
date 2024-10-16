@@ -154,9 +154,22 @@ app_server <- function(input, output, session) {
   ## Variáveis para identificar primeiro acesso
   initial_state <- reactiveVal(T)
 
-  # 2 Gráficos iniciais ----
-  ### Título da caixa do mapa
 
+  # 2 Gráficos iniciais ----
+  ## 2.0 Modal de carregamento inicial ----
+  ## Modal para avisar que dados estão carregando
+  shinyalert::shinyalert(
+    html = TRUE,
+    title = "Carregando painel",
+    showConfirmButton = F,
+    text = tagList(
+      HTML("<div class='loader_data'></div>")
+    ),
+    closeOnEsc = T,
+    closeOnClickOutside = T
+  )
+  ## 2.1 Gráficos iniciais ----
+  ### Título da caixa do mapa
   ## Reativos porque podemos mudar a eficiência e consequentemente os gráficos e títulos
   observeEvent(input$seletor_ef, {
     # browser()
@@ -207,6 +220,9 @@ app_server <- function(input, output, session) {
         mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
                                                  initial_state = T, ef_proc_res = F, list_graphs_inputs_outputs = NULL)
       }
+      # browser()
+      ## Fechando modal de carregamento inicial
+      shinyalert::closeAlert()
       ## Senão for a versão inicial da aplicação, apresentar popup para troca
     }else{
       ## Alterando o título dos gráficos de eficiência

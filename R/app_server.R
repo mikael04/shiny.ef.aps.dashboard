@@ -577,6 +577,7 @@ app_server <- function(input, output, session) {
       mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
                                                initial_state = F, ef_proc_res,
                                                list_graphs_inputs_outputs)
+      shinyalert::closeAlert()
     }
   })
   # 4. Reativ. UI ----

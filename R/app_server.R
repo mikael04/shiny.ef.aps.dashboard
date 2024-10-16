@@ -165,7 +165,8 @@ app_server <- function(input, output, session) {
     text = tagList(
       HTML("<div class='loader_data'></div>")
     ),
-    closeOnEsc = F,
+    closeOnEsc = T,
+    closeOnClickOutside = T
   )
   ## 2.1 Gráficos iniciais ----
   ### Título da caixa do mapa
@@ -219,6 +220,9 @@ app_server <- function(input, output, session) {
         mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
                                                  initial_state = T, ef_proc_res = F, list_graphs_inputs_outputs = NULL)
       }
+      # browser()
+      ## Fechando modal de carregamento inicial
+      shinyalert::closeAlert()
       ## Senão for a versão inicial da aplicação, apresentar popup para troca
     }else{
       ## Alterando o título dos gráficos de eficiência
@@ -247,7 +251,17 @@ app_server <- function(input, output, session) {
                            choices = c("2022", "2023"), selected = "2023")
       title_period = title_period(sel_period_name_ano)
     }
-  })
+  }) %...>%
+    (function(result) {
+      shinyalert::closeAlert()
+    }) %...!%
+    (function(error) {
+      shinyalert::shinyalert(
+        title = "Error",
+        text = paste("An error occurred:", error$message),
+        type = "error"
+      )
+    })
   ## Versão inicial da aplicação dos títulos de mapa e gráfico de eficiência
   ## Atualizando nome do período
   output$title_map <- renderUI({
@@ -357,8 +371,6 @@ app_server <- function(input, output, session) {
         })
       }
     }
-    ## Fechando modal de carregamento inicial
-    shinyalert::closeAlert()
   })
 
   # 3. Aplicar (aplicando filtros reativos) ----
@@ -575,7 +587,6 @@ app_server <- function(input, output, session) {
       mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
                                                initial_state = F, ef_proc_res,
                                                list_graphs_inputs_outputs)
-      shinyalert::closeAlert()
     }
   })
   # 4. Reativ. UI ----

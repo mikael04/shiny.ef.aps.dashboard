@@ -10,7 +10,21 @@ production:
     dbname: shiny.ef.aps.dados
     user: postgres
     password: ShinyEFAPS01
-development:
+  run_settings:
+    port: 4000
+    prod: TRUE
+development_vm:
+  app_prod: yes
+  db:
+    host: localhost
+    port: 5432
+    dbname: shiny.ef.aps.dados
+    user: postgres
+    password: ShinyEFAPS01
+  run_settings:
+    port: 4001
+    prod: FALSE
+development_local:
   golem_wd: !expr golem::pkg_path()
   db:
     host: localhost
@@ -18,3 +32,6 @@ development:
     dbname: shiny.ef.aps.dados
     user: postgres
     password: postgres
+  run_settings:
+    port: 4000
+    prod: FALSE

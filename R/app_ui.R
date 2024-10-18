@@ -37,6 +37,8 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    ## Test
+    tags$script(src = "https://cdn.jsdelivr.net/gh/Appsilon/shiny.tictoc@v0.2.0/shiny-tic-toc.min.js"),
     # Your application UI logic
     fluidPage(
       class = "pageLayout",

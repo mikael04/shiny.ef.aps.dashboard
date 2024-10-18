@@ -11,7 +11,7 @@ production:
     user: ${DB_USER}
     password: ${DB_PASSWORD_PROD}
   local:
-    port: 4000
+    port: ${PORT}
     prod: TRUE
 development_vm:
   db:
@@ -21,7 +21,7 @@ development_vm:
     user: ${DB_USER}
     password: ${DB_PASSWORD_PROD}
   local:
-    port: 4001
+    port: ${PORT}
     prod: FALSE
 development_local:
   db:
@@ -31,5 +31,5 @@ development_local:
     user: ${DB_USER}
     password: ${DB_PASSWORD_DEV}
   local:
-    port: 4000
+    port: ${PORT}
     prod: FALSE

@@ -94,6 +94,8 @@ golem::add_fct("download_data", with_test = F)
 ## DB
 ### Conexão
 golem::add_utils("db", with_test = F)
+## Configurações de environment
+golem::add_utils("environment", with_test = F)
 ### Atualização dos dados (usando a transform_data_rda que chama a update_data_PostgreSQL)
 golem::add_fct("update_data_PostgreSQL", with_test = F)
 

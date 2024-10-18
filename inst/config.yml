@@ -10,10 +10,26 @@ production:
     dbname: ${DB_NAME}
     user: ${DB_USER}
     password: ${DB_PASSWORD_PROD}
-development:
+  local:
+    port: ${PORT}
+    prod: TRUE
+development_vm:
+  db:
+    host: ${DB_HOST}
+    port: 5432
+    dbname: ${DB_NAME}
+    user: ${DB_USER}
+    password: ${DB_PASSWORD_PROD}
+  local:
+    port: ${PORT}
+    prod: FALSE
+development_local:
   db:
     host: ${DB_HOST}
     port: 5432
     dbname: ${DB_NAME}
     user: ${DB_USER}
     password: ${DB_PASSWORD_DEV}
+  local:
+    port: ${PORT}
+    prod: FALSE

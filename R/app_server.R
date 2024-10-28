@@ -1189,4 +1189,10 @@ app_server <- function(input, output, session) {
   session$onSessionEnded(function() {
     DBI::dbDisconnect(con)
   })
+  ## Informações sobre usuários se conectando
+  observe({
+    cat(sprintf("[%s] Connection details:\n", format(Sys.time())))
+    cat(sprintf("- IP Address: %s\n", session$request$REMOTE_ADDR))
+    cat(sprintf("- User Agent: %s\n", session$request$HTTP_USER_AGENT))
+  })
 }

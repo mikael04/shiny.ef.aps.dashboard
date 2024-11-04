@@ -34,7 +34,7 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
           "Período: ", "<b>", input_sel_period_name, "</b>", "\n",
           "Índice de ", ifelse(in_out_flag == T, "entrada: ",  "saída: "),
           "<b>", in_out_names_clean[i-1], "</b>", ".\n",
-          "Valor atual", ifelse(graph_type == 2, ": ", "médio: "),
+          "Valor atual", ifelse(graph_type == 2, ": ", " médio: "),
           "<b>", round(!!as.name(cols_names[i]), 2), "</b>", "\n",
           "A região <b>já é eficiente nesta área.</br>"),
         eixo_x = in_out_names[i-1])
@@ -49,7 +49,7 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
           "Índice de ", ifelse(in_out_flag == T, "entrada: ",  "saída: "),
           "<b>", in_out_names_clean[i-1], "</b>", ".\n",
           "Valor para alcançar eficiência: ", "<b>", round((!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])), 2), "</b>", "\n",
-          "Valor atual", ifelse(graph_type == 2, ": ", "médio: "),
+          "Valor atual", ifelse(graph_type == 2, ": ", " médio: "),
           "<b>", round(!!as.name(cols_names[i]), 2), "</b>", "\n"),
         eixo_x = in_out_names[i-1])
   }
@@ -59,7 +59,7 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
         tooltip_col = paste0(
           tooltip_col, "\n",
           "Município de comparação: ", "<b>", nome_area_cmp, "</b>", "\n",
-          "Valor atual", ifelse(graph_type == 2, ": ", "médio: "),
+          "Valor atual", ifelse(graph_type == 2, ": ", " médio: "),
           "<b>", round(!!as.name(cols_names[i+cols_jump*2+1]), 2), "</b>", "\n"
         )
       )

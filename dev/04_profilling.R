@@ -17,7 +17,7 @@ golem::document_and_reload()
 ## tell shiny to log all reactivity
 reactlog_enable()
 
-# Run app
+# Run app ----
 run_app()
 
 # once app has closed, display reactlog from shiny
@@ -25,3 +25,4 @@ shiny::reactlogShow()
 
 # Profvis ----
 profvis::profvis(print(run_app()))
+

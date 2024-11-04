@@ -21,6 +21,7 @@ source("R/fct_init_grafs.R")
 source("R/fct_server_mod_mapa.R")
 source("R/fct_server_mod_tabela_ef.R")
 source("R/fct_transform_data_to_download.R")
+source("R/fct_update_data_PostgreSQL.R")
 library(ggplot2)
 library(patchwork)
 ## Chamando a função para recriar dados

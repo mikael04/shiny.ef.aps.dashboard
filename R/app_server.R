@@ -242,7 +242,6 @@ app_server <- function(input, output, session) {
     })
     ## Criando gráfico de eficiência ou apenas box vazio
     if(initial_state()){
-      # browser()
       ## 2.2.1 Gráfico de eficiência ----
       output$box_graf_ef <- renderUI({
         div(
@@ -396,15 +395,12 @@ app_server <- function(input, output, session) {
                    "Flag cmp: ", flag_cmp))
       }
     }
-    # browser()
     ## Se o primeiro resultado for nulo, quer dizer que não foram encontrados dados
     ## para o município
     ## Debug
     if(debug){
       promise <- "debug"
     }
-    input_2 <- ifelse(input$type == "uf", "NULL",
-                      ifelse(input$type == "reg_saude", input$sel_reg_saude_1, input$sel_mun_1))
     ## Checando para ver se município selecionado possui dados
     check <- func_check_has_data(df_dados_mun_uf_reg_saud_filter, input$sel_uf_1, input_2, input$type, input$seletor_ef)
     if(!isTruthy(check)){
@@ -413,20 +409,22 @@ app_server <- function(input, output, session) {
     }
     # browser()
     if(is.null(promise)){
-      if(input$cmp_1){
+      if(isTruthy(input$cmp_1)){
         mod_modal_server("modal_1",
                          title = "Não há dados",
                          first_test = "O município selecionado ou o de comparação",
                          mid_text = " </b>não possui dados disponíveis na nossa base de dados.</b>",
                          end_text = " Por favor, selecione outro município ou de comparação")
+      }else{
+        mod_modal_server("modal_1",
+                         title = "Não há dados",
+                         first_test = "O município selecionado",
+                         mid_text = " </b>não possui dados disponíveis na nossa base de dados.</b>",
+                         end_text = " Por favor, selecione outro município")
       }
-      mod_modal_server("modal_1",
-                       title = "Não há dados",
-                       first_test = "O município selecionado",
-                       mid_text = " </b>não possui dados disponíveis na nossa base de dados.</b>",
-                       end_text = " Por favor, selecione outro município")
     }else{
-      # browser()
+      input_2 <- ifelse(input$type == "uf", "NULL",
+                        ifelse(input$type == "reg_saude", input$sel_reg_saude_1, input$sel_mun_1))
       ## Usado para debug
       if(debug){
         # Dados tabela
@@ -486,7 +484,6 @@ app_server <- function(input, output, session) {
           }
         }
         list_dfs <- list(NULL, NULL)
-        # browser()
         result_func <- func_applyFilters(
           tipo_quad, graph_type, title_ef_def(),
           list_dfs, con, data_from_bd,
@@ -505,7 +502,6 @@ app_server <- function(input, output, session) {
         )
 
 
-        browser()
         ## Tabela
         gt_tabela <- result_func[[1]][[1]]
         ## Mapa
@@ -515,6 +511,7 @@ app_server <- function(input, output, session) {
         flag_cmp = F
         ef_df_cmp = NULL
       }
+
       ### 3.1.1 Tabela do município ----
       ## Colocada aqui, porque depois das tranformações surgiram problemas no pivot_wider
       mod_tabela_ef_server("tabela_ef_1", F, gt_tabela)
@@ -892,6 +889,14 @@ app_server <- function(input, output, session) {
                            label = "Selecione o quadrimestre:",
                            choices = choices_quad, selected = choices_quad[nrow(df_quad)])
       title_period = title_period(sel_period_name_quad)
+      ## Alterando gráficos iniciais
+      ## Mapa do brasil
+      mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = F)
+      ## Tabela de eficiência das UFs
+      mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = F)
+      ### Inputs e outputs
+      mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                               initial_state = T, ef_proc_res = F, list_graphs_inputs_outputs = NULL)
 
     }else{
       updateSelectizeInput(session,
@@ -899,6 +904,15 @@ app_server <- function(input, output, session) {
                            label = "Selecione ano:",
                            choices = c("2022", "2023"), selected = "2023")
       title_period = title_period(sel_period_name_ano)
+
+      ## Alterando gráficos iniciais
+      ## Mapa do brasil
+      mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = T)
+      ## Tabela de eficiência das UFs
+      mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = T)
+      ### Inputs e outputs
+      mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                               initial_state = T, ef_proc_res = T, list_graphs_inputs_outputs = NULL)
     }
   })
   ## Versão inicial da aplicação dos títulos de mapa e gráfico de eficiência

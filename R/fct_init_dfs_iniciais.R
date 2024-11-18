@@ -9,11 +9,10 @@ func_init_dfs_iniciais <- function(ef_ufs, uf_sf, ef_ufs_quad, ef_br, sel_period
                                    ef_proc_res){
   if(F){
     # ef_proc_res = T -> Processos; = F -> Resultados
-    ef_proc_res <- T
+    ef_proc_res <- F
   }
   # browser()
 
-  var_ef <- "ef_BCC"
   if(ef_proc_res){
     title_ef <- "Processos"
   }else{

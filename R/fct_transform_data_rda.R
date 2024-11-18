@@ -31,6 +31,7 @@ func_transform_data_rda <- function(){
   overwrite_data <- T
   use_RDS <- T
   use_RDA <- T
+  update_db <- T
   ## Ao invés de usar 6, usaremos o último disponível, portanto não será setado manualmente
   # sel_period <- 6L
   if(overwrite_data){
@@ -286,11 +287,11 @@ func_transform_data_rda <- function(){
     ### DFs iniciais
     list_func_init_dfs_iniciais <- func_init_dfs_iniciais(ef_ufs_proc, uf_sf, ef_ufs_proc_quad, ef_br_proc, sel_period_proc,
                                                           ef_proc_res = T)
-    df_mapa_inicial_ufs_sf <- list_func_init_dfs_iniciais[[1]]
-    df_tabela_inicial_ufs <- list_func_init_dfs_iniciais[[2]]
+    df_mapa_inicial_ufs_sf_proc <- list_func_init_dfs_iniciais[[1]]
+    df_tabela_inicial_ufs_proc <- list_func_init_dfs_iniciais[[2]]
 
     ## Gráficos iniciais
-    list_func_init_grafs <- func_init_grafs(df_mapa_inicial_ufs_sf, df_tabela_inicial_ufs,
+    list_func_init_grafs <- func_init_grafs(df_mapa_inicial_ufs_sf_proc, df_tabela_inicial_ufs_proc,
                                             ef_br_proc, sel_period_proc,
                                             ef_proc_res = T)
     initial_map_p <- list_func_init_grafs[[1]]
@@ -303,11 +304,11 @@ func_transform_data_rda <- function(){
     ### DFs iniciais
     list_func_init_dfs_iniciais <- func_init_dfs_iniciais(ef_ufs_res, uf_sf, ef_ufs_res_quad, ef_br_res, sel_period_res,
                                                           ef_proc_res = F)
-    df_mapa_inicial_ufs_res_sf <- list_func_init_dfs_iniciais[[1]]
-    df_tabela_inicial_res_ufs <- list_func_init_dfs_iniciais[[2]]
+    df_mapa_inicial_ufs_sf_res <- list_func_init_dfs_iniciais[[1]]
+    df_tabela_inicial_ufs_res <- list_func_init_dfs_iniciais[[2]]
 
     ## Gráficos iniciais
-    list_func_init_grafs <- func_init_grafs(df_mapa_inicial_ufs_res_sf, df_tabela_inicial_res_ufs,
+    list_func_init_grafs <- func_init_grafs(df_mapa_inicial_ufs_sf_res, df_tabela_inicial_ufs_res,
                                             ef_br_res, sel_period_res,
                                             ef_proc_res = F)
     initial_map_r <- list_func_init_grafs[[1]]
@@ -341,7 +342,9 @@ func_transform_data_rda <- function(){
       saveRDS(df_muns_proc_download, file = "data/database_data/df_muns_proc_download.rds")
       saveRDS(df_muns_res_download, file = "data/database_data/df_muns_res_download.rds")
       ## Após salvar dados utilizados no formato .rds, atualizar o banco de dados
-      func_update_data_PostreSQL()
+      if(update_db){
+        func_update_data_PostreSQL()
+      }
     }
 
     ### Formato RDA

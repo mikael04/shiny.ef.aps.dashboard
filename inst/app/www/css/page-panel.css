@@ -99,3 +99,7 @@
 .modal-download > .modal > .modal-dialog > .modal-content{
   width: 150% !important;
 }
+/* Removendo o scroll das caixas dos gráficos */
+.bslib-card .card-body {
+  overflow: auto; /* hidden */
+}

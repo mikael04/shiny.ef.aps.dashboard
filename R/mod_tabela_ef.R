@@ -26,6 +26,7 @@ mod_tabela_ef_server <- function(id, initial_state, gt_tabela, ef_proc_res){
     }
     # browser()
     if(initial_state){
+      # browser()
       ## ef_proc_res = T -> Eficiência de resultados, F -> Eficiência de processos
       if(ef_proc_res){
         gt_tabela <- initial_gt_tabela_r

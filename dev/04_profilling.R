@@ -4,7 +4,7 @@ options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mo
 
 # Comment this if you don't want the app to be served on a random port
 # options(shiny.port = httpuv::randomPort())
-options(shiny.port = 4000)
+options(shiny.port = 4001)
 
 # Detach all loaded packages and clean your environment
 golem::detach_all_attached()
@@ -13,16 +13,15 @@ golem::detach_all_attached()
 # Document and reload your package
 golem::document_and_reload()
 
-# Reactlog ----
-## tell shiny to log all reactivity
-reactlog_enable()
+# # Reactlog ----
+# ## tell shiny to log all reactivity
+# reactlog_enable()
 
-# Run app ----
-run_app()
+# ## Run app
+#  run_app()
 
-# once app has closed, display reactlog from shiny
-shiny::reactlogShow()
+# ## once app has closed, display reactlog from shiny
+# shiny::reactlogShow()
 
 # Profvis ----
-profvis::profvis(print(run_app()))
-
+profilling <- profvis::profvis(print(run_app()))

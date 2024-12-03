@@ -44,7 +44,7 @@ func_server_mod_mapa <- function(ef_df, map_type, mun_sel, nome_mun_sel, title_e
         fill = "Eficiência"
       ) +
       ggplot2::theme(plot.title = ggtext::element_markdown()) +
-      ggplot2::scale_fill_gradient2(low = "#B3C7F7", high = "#054FB9") +
+      # ggplot2::scale_fill_gradient2(low = "#B3C7F7", high = "#054FB9") +
       ggplot2::guides(fill = guide_legend(theme = theme(
         legend.title = element_text(size = 15, face = "bold", colour = "black")
       )))
@@ -74,10 +74,12 @@ func_server_mod_mapa <- function(ef_df, map_type, mun_sel, nome_mun_sel, title_e
       ggplot2::labs(
         fill = "Eficiência"
       ) +
-      ggplot2::scale_fill_gradient2(low = "#B3C7F7", high = "#054FB9") +
+      # ggplot2::scale_fill_gradient2(low = "#1CD1A2", high = "#141B48") +
       ggplot2::guides(fill = guide_legend(theme = theme(
         legend.title = element_text(size = 15, face = "bold", colour = "black")
       )))
+
+    # ggiraph::girafe(ggobj = ggplot_map)
 
     ## Caso seja o mapa de município, adicionar a borda para destacar município selecionado
     if(map_type == 2){

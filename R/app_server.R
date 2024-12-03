@@ -586,13 +586,13 @@ app_server <- function(input, output, session) {
       if(isTruthy(ied_mun_sel)){
         func_selector_type_2(session, output, input$type, input$cmp_1, id_selector, uf_ordered, reg_saude_ordered, df_cap_uf_ibge, input$sel_uf_2)
         ## Botão para seleção do filtro de comparação
-        output$checkbox_filtro_eq <- renderUI({
-          shinyWidgets::awesomeCheckbox(
-            inputId = "filtro_eq",
-            label = paste0("Filtro de equidade"),
-            value = TRUE
-          )
-        })
+        # output$checkbox_filtro_eq <- renderUI({
+        #   shinyWidgets::awesomeCheckbox(
+        #     inputId = "filtro_eq",
+        #     label = paste0("Filtro de equidade"),
+        #     value = TRUE
+        #   )
+        # })
 
         ## Apresentando modal explicando comparação entre municípios
         title <- dplyr::case_when(

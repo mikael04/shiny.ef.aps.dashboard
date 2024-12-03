@@ -20,6 +20,7 @@ func_ui_panel <- function(session, id){
           # Filtro lateral ----
           div(
             class="filtro-lateral",
+            ## Seletor de tipo de eficiência
             div(
               div(
                 class="h4 tit-eficiencia",
@@ -32,6 +33,26 @@ func_ui_panel <- function(session, id){
                 tags$span(id="right", class="pointer", "RESULTADOS")
               )
             ),
+            ## Seletor do filtro de equidade
+            div(
+              div(
+                class="h4 tit-equidade",
+                "Equidade"
+              ),
+              div(
+                class = "seletor_ef",
+                tags$span(id="left", class="pointer", "LIGADO"),
+                shinyWidgets::materialSwitch(inputId = "seletor_eq", label = "", inline = TRUE),
+                tags$span(id="right", class="pointer", "DESLIGADO")
+              )
+            ),
+            selectizeInput(
+              inputId = "sel_period",
+              label = "Selecione o quadrimestre:",
+              choices = choices_quad,
+              selected = choices_quad[nrow(df_quad)],
+              width = "100%"
+            ),
             selectizeInput(
               inputId = "sel_period",
               label = "Selecione o quadrimestre:",
@@ -42,7 +63,7 @@ func_ui_panel <- function(session, id){
             ## Filtros dinâmicos UF/RegSaude/Mun ----
             mod_filters_ui("filters_1"),
             ## Filtro de equidade
-            uiOutput("checkbox_filtro_eq"),
+            # uiOutput("checkbox_filtro_eq"),
             ## Switch, não usado
             # div(
             #   div(

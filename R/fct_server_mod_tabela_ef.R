@@ -10,6 +10,19 @@ func_server_mod_tabela_ef <- function(
     df_tabela, sel_period, flag_brasil_mun, graph_type, mun_sel,
     with_miniplot, ef_proc_res, tab_title_ef, tab_title_extra,
     flag_cmp, mun_cmp){
+  if(F){
+    df_tabela <-df_tabela_inicial_ufs
+    sel_period <- 6
+    flag_brasil_mun <- T
+    graph_type <- 0
+    mun_sel <- 0
+    with_miniplot <- F
+    ef_proc_res <- T
+    tab_title_ef = "Processos"
+    tab_title_extra = "nas UFs"
+    flag_cmp = F
+    mun_cmp = 0
+  }
   ## Se flag_brasil, mapa inicial dos estados do país, se F, mapa do município
   flag_brasil <- ifelse(flag_brasil_mun, T, F)
   flag_mun <- ifelse(flag_brasil_mun, F, T)
@@ -21,7 +34,7 @@ func_server_mod_tabela_ef <- function(
     ### Brasil ----
     ## Tabela do Brasil, já pré-processada
     if(flag_brasil){
-      df_tabela <- df_tabela_inicial_ufs
+      df_tabela <- df_tabela
     }
     ### Município ----
     ## Tabela do município
@@ -51,10 +64,8 @@ func_server_mod_tabela_ef <- function(
   if(!with_miniplot){
     if(flag_brasil){
       df_tabela <- df_tabela |>
-        dplyr::filter(quad_cod == sel_period) |>
-        dplyr::ungroup() |>
-        dplyr::select(-CO_UF, -quad_cod) |>
-        dplyr::rename(UF = nome_uf)
+        dplyr::select(UF, tidyr::ends_with(paste0(type_ef, "_", sel_period))) |>
+        dplyr::rename(UF = 1, ef_BCC = 2)
     }
     if(flag_mun){
       df_tabela_quad_sel <- df_tabela |>

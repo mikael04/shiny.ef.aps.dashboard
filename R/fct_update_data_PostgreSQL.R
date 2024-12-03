@@ -24,7 +24,7 @@ func_update_data_PostreSQL <- function(debug){
   list_files <- list_files[!grepl("sf", list_files)]
   list_files <- list_files[!grepl("initial", list_files)]
   # Removendo "data/" e ".rda"
-  list_names <- sub("^data/", "", sub("\\.rds$", "", list_files))
+  list_names <- sub("^data/database_data/", "", sub("\\.rds$", "", list_files))
   if(debug)
     print(paste0("Começando escrita no banco de dados, sobrescrevendo ", length(list_files), " tabelas"))
   ## Salvando os dados no banco de dados

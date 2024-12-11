@@ -28,9 +28,9 @@ library(patchwork)
 # func_transform_data_rda()
 
 func_transform_data_rda <- function(){
-  overwrite_data <- F
-  use_RDS <- F
-  use_RDA <- F
+  overwrite_data <- T
+  use_RDS <- T
+  use_RDA <- T
   update_db <- F
   ## Ao invés de usar 6, usaremos o último disponível, portanto não será setado manualmente
   # sel_period <- 6L

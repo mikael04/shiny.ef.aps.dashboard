@@ -53,13 +53,6 @@ func_ui_panel <- function(session, id){
               selected = choices_quad[nrow(df_quad)],
               width = "100%"
             ),
-            selectizeInput(
-              inputId = "sel_period",
-              label = "Selecione o quadrimestre:",
-              choices = choices_quad,
-              selected = choices_quad[nrow(df_quad)],
-              width = "100%"
-            ),
             ## Filtros dinâmicos UF/RegSaude/Mun ----
             mod_filters_ui("filters_1"),
             ## Filtro de equidade

@@ -45,7 +45,7 @@ func_aux_graph_lollipop_input_proc_1 <- function(
     ## Gráfico Despesas por hab. coberto -----
     i <- 2
     ## Quantas colunas terá que pular para ter o valor que falta para eficiência
-    cols_jump <- 2
+    cols_jump <- 1
     ## Gerando tooltips
     ef_df_br <- func_create_tooltip_ef(
       ef_df_br, graph_type = 0, ef = F, flag_cmp = F, i, "3° Quad/2023",
@@ -85,7 +85,7 @@ func_aux_graph_lollipop_input_proc_1 <- function(
   }
   ## Municípios
   if(graph_type == 2){
-    # browser()
+    browser()
     ef_df_mun_sel <- ef_df |>
       dplyr::select(c(2, 8:11))
 
@@ -110,7 +110,7 @@ func_aux_graph_lollipop_input_proc_1 <- function(
     ## Gráfico Despesas por hab. coberto -----
     i <- 2
     ## Quantas colunas terá que pular para ter o valor que falta para eficiência
-    cols_jump <- 2
+    cols_jump <- 1
     ## Aqui comparamos se existe um valor que a área geográfica precisa melhorar para o output
     ## Se == 0, significa que já é eficiente
     if(ef_df_mun_sel[[1, i+2]] == 0){

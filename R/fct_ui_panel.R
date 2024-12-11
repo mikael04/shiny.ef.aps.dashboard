@@ -33,19 +33,6 @@ func_ui_panel <- function(session, id){
                 tags$span(id="right", class="pointer", "RESULTADOS")
               )
             ),
-            ## Seletor do filtro de equidade
-            div(
-              div(
-                class="h4 tit-equidade",
-                "Equidade"
-              ),
-              div(
-                class = "seletor_ef",
-                tags$span(id="left", class="pointer", "LIGADO"),
-                shinyWidgets::materialSwitch(inputId = "seletor_eq", label = "", inline = TRUE),
-                tags$span(id="right", class="pointer", "DESLIGADO")
-              )
-            ),
             selectizeInput(
               inputId = "sel_period",
               label = "Selecione o quadrimestre:",

@@ -31,7 +31,7 @@ func_transform_data_rda <- function(){
   overwrite_data <- T
   use_RDS <- T
   use_RDA <- T
-  update_db <- F
+  update_db <- T
   ## Ao invés de usar 6, usaremos o último disponível, portanto não será setado manualmente
   # sel_period <- 6L
   if(overwrite_data){
@@ -64,6 +64,7 @@ func_transform_data_rda <- function(){
     ## Dados municipais, estaduais e de região de saúde, usados nos filtros laterais
     dados_munic_uf_regiao_regsaude <- read.csv(here::here("data-raw/dados_territorio/dados_territorio.csv"))
 
+    ## Buscando apenas dados de municípoios e ied
     df_mun_ied <- data.table::fread(here::here("data-raw/efi_processos_2022_2023_eq.csv")) |>
       dplyr::select(cod_ibge = ibge, nome_mun,
                     ied = indice_de_equidade_e_dimensionamento_ied) |>
@@ -72,6 +73,7 @@ func_transform_data_rda <- function(){
       dplyr::select(cod_ibge, nome_mun, nome_uf,
                     ied)
 
+    ## Filtrando apenas os que possuem dados
     df_dados_mun_uf_reg_saud_filter <- dados_munic_uf_regiao_regsaude |>
       dplyr::select(cod_ibge, CO_REGSAUD, CO_UF, nome_mun, nome_rs, nome_uf) |>
       dplyr::left_join(df_mun_ied, by = c("cod_ibge", "nome_mun", "nome_uf")) |>
@@ -94,7 +96,8 @@ func_transform_data_rda <- function(){
 
     # Manipulando dados ----
     ## Eficiência dos municípios ----
-    ef_muns_proc <- data.table::fread(here::here("data-raw/efi_processos_2022_2023_eq.csv")) |>
+    ef_muns_proc <- data.table::fread(here::here("data-raw/eficiencia_processos_corrigida_2022_2023.csv")) |>
+      dplyr::rename(ef_BCC_antigo = ef_BCC, ef_BCC = ef_BCC_corrigido) |>
       dplyr::rename(cod_ibge = ibge) |>
       ## Unindo e adicionando variáveis que serão necessárias à um único banco
       dplyr::left_join(dados_munic_uf_regiao_regsaude, by = "cod_ibge") |>
@@ -105,9 +108,9 @@ func_transform_data_rda <- function(){
                     quad_cod = (ano-2022)*3+quad) |>
       dplyr::select(cod_ibge, nome_mun = nome_mun.x, ano, ano_quad, quad_cod, ef_BCC, ef_CCR,
                     ## inputs
-                    desp_por_hab_cob, eq_por_hab_cad = eq_por_hab,
+                    desp_por_hab_cob = desp_por_eq_2,
                     ## Quanto falta nos inputs
-                    v_desp_por_hab_cob, v_eq_por_hab_cad,
+                    v_desp_por_hab_cob = v_desp_final,
                     ## outputs
                     ind1_gest, ind2_teste, ind3_odonto, ind4_cito,
                     ind5_vacina, ind6_hiper, ind7_diab,
@@ -195,9 +198,9 @@ func_transform_data_rda <- function(){
     ef_ufs_proc <- ef_muns_proc |>
       dplyr::select(CO_UF, nome_uf, ef_BCC, quad_cod,
                     ## inputs
-                    desp_por_hab_cob, eq_por_hab_cad,
+                    desp_por_hab_cob,
                     ## Quanto falta nos inputs
-                    v_desp_por_hab_cob, v_eq_por_hab_cad,
+                    v_desp_por_hab_cob,
                     ## outputs
                     ind1_gest, ind2_teste, ind3_odonto, ind4_cito,
                     ind5_vacina, ind6_hiper, ind7_diab,
@@ -379,3 +382,25 @@ func_transform_data_rda <- function(){
   }
 }
 
+
+# ## Manipulando dados apenas para resolver município duplicado
+#
+# ## Backup
+# data.table::fwrite(ef_muns_proc, "data-raw/eficiencia_processos_corrigida_2022_2023_backup.csv")
+#
+# ## Filtrando apenas uma das linhas pro município para cada quadrimestre
+# mun_aux <- ef_muns_proc |>
+#   dplyr::filter(ibge == 420207) |>
+#   dplyr::arrange(desc(quad)) |>
+#   dplyr::group_by(quad) |>
+#   dplyr::distinct(quad, .keep_all = TRUE) |>
+#   dplyr::ungroup()
+#
+# ## Removendo o município da base
+# ef_muns_proc <- dplyr::filter(ef_muns_proc, ibge != 420207)
+#
+# ## Adicionando apenas uma linha por quadrimestre
+# ef_muns_proc <- dplyr::bind_rows(ef_muns_proc, mun_aux)
+#
+# ## Salvando nova base
+# data.table::fwrite(ef_muns_proc, "data-raw/eficiencia_processos_corrigida_2022_2023.csv")

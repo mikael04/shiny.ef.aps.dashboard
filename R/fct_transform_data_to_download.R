@@ -18,9 +18,9 @@ func_transform_data_to_download <- function(ef_muns_proc, ef_muns_res){
       ## Dados de eficiência
       ef_BCC,
       ## Inputs
-      eq_por_hab_cad, desp_por_hab_cob,
+      desp_por_hab_cob,
       ### Quanto falta nos inputs
-      v_eq_por_hab_cad, v_desp_por_hab_cob,
+      v_desp_por_hab_cob,
       ## Outputs
       ind1_gest, ind2_teste, ind3_odonto, ind4_cito, ind5_vacina, ind6_hiper, ind7_diab,
       ### Quanto falta nos outputs

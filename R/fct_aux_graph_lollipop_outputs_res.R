@@ -85,12 +85,12 @@ func_aux_graph_lollipop_outputs_res <- function(
   }
   ## Gráfico de eficiencia do município ----
   if(graph_type == 2){
-    # browser()
+    browser()
     ## Selecionando colunas de output
     cols_init <- 12
     col_end <- cols_init-1+length(output_names)*2
     ef_df_mun_sel <- ef_df |>
-      dplyr::select(c(2, cols_init:col_end))
+      dplyr::select(1, ef_BCC, quad_cod, starts_with("tx_"), starts_with("v_tx"))
 
     if(flag_cmp){
       # browser()
@@ -134,8 +134,11 @@ func_aux_graph_lollipop_outputs_res <- function(
       cols = cols-cols_jump*2-1
     }
 
+    ## parâmetro que irá definir qual a primeira coluna de output
+    starts_in <- 4
+
     ## Criando camadas de linhas e pontos conforme colunas de outputs
-    for(i in 2:cols){
+    for(i in starts_in:cols){
       # i <- 2
       ## Comparando com v_ para verificar se município já é eficiente
       if(ef_df_mun_sel[[1, i+cols_jump]] == 0){

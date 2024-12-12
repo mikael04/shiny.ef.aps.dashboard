@@ -25,14 +25,14 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
 
   ## Gráfico de eficiencia do Brasil ----
   if(graph_type == 0){
+    # browser()
     ## Selecionando colunas de output e último quadrimestre
     ef_df_br <- ef_df |>
       # dplyr::filter(quad_cod == quad_sel) |>
-      dplyr::select(c(1, 9:21))
+      dplyr::select(1, ef_BCC, quad_cod, starts_with("ind"), starts_with("v_ind"))
 
     cols_names <- colnames(ef_df_br)
 
-    # browser()
     graph_lollipop <- ggplot() +
       ggplot2::theme_minimal() +
       theme(
@@ -48,7 +48,7 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
         title = "Saídas"
       )
 
-    ## Quantas colunas precisa pular para comparar com o seu próprio "v_"
+    ## Quantas colunas precisa pular para comparar com o seu próprio "v_", isso também indica o número de colunas de output
     cols_jump <- 7
     cols = ncol(ef_df_br)-cols_jump
 
@@ -57,9 +57,12 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
     ## Nome das colunas
     cols_names <- colnames(ef_df_br)
 
+    ## parâmetro que irá definir qual a primeira coluna de output
+    starts_in <- 4
+
     # browser()
     ## Criando comparações dinamicamente
-    for(i in 2:cols){
+    for(i in starts_in:cols){
       ## Gerando tooltips
       ef_df_br <- func_create_tooltip_ef(
         ef_df_br, graph_type = 0, ef = F, flag_cmp = F, i, "3° Quad/2023",
@@ -84,7 +87,7 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
     # browser()
     ## Selecionando colunas de output
     ef_df_mun_sel <- ef_df |>
-      dplyr::select(c(2, 11:24))
+      dplyr::select(1, ef_BCC, quad_cod, starts_with("ind"), starts_with("v_ind"))
 
     if(flag_cmp){
       ## Selecionando colunas de output

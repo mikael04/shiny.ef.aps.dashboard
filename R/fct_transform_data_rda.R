@@ -296,7 +296,7 @@ func_transform_data_rda <- function(){
     ## Gráficos iniciais
     list_func_init_grafs <- func_init_grafs(df_mapa_inicial_ufs_sf_proc, df_tabela_inicial_ufs_proc,
                                             ef_br_proc, sel_period_proc,
-                                            ef_proc_res = T)
+                                            ef_proc_res = T, newcase = T)
     initial_map_p <- list_func_init_grafs[[1]]
     initial_gt_tabela_p <- list_func_init_grafs[[2]]
     initial_graf_inputs_outputs_p <- list_func_init_grafs[[3]]
@@ -310,10 +310,12 @@ func_transform_data_rda <- function(){
     df_mapa_inicial_ufs_sf_res <- list_func_init_dfs_iniciais[[1]]
     df_tabela_inicial_ufs_res <- list_func_init_dfs_iniciais[[2]]
 
+    source("R/fct_aux_graph_lollipop_outputs_res.R")
+    source("R/fct_create_tooltip_ef.R")
     ## Gráficos iniciais
     list_func_init_grafs <- func_init_grafs(df_mapa_inicial_ufs_sf_res, df_tabela_inicial_ufs_res,
                                             ef_br_res, sel_period_res,
-                                            ef_proc_res = F)
+                                            ef_proc_res = F, newcase = T)
     initial_map_r <- list_func_init_grafs[[1]]
     initial_gt_tabela_r <- list_func_init_grafs[[2]]
     initial_graf_inputs_outputs_r <- list_func_init_grafs[[3]]

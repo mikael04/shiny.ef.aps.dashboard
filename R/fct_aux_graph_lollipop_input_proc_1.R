@@ -85,7 +85,7 @@ func_aux_graph_lollipop_input_proc_1 <- function(
   }
   ## Municípios
   if(graph_type == 2){
-    browser()
+    # browser()
     ef_df_mun_sel <- ef_df |>
       dplyr::select(c(2, 8:11))
 

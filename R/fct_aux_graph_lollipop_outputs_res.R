@@ -29,7 +29,7 @@ func_aux_graph_lollipop_outputs_res <- function(
     ## Selecionando colunas de output e último quadrimestre
     ef_df_br <- ef_df |>
       # dplyr::filter(quad_cod == quad_sel) |>
-      dplyr::select(c(1, 8:11))
+      dplyr::select(1, ef_BCC, quad_cod, starts_with("tx_"), starts_with("v_tx"))
 
     cols_names <- colnames(ef_df_br)
 
@@ -58,9 +58,12 @@ func_aux_graph_lollipop_outputs_res <- function(
     ## Nome das colunas
     cols_names <- colnames(ef_df_br)
 
+    ## parâmetro que irá definir qual a primeira coluna de output
+    starts_in <- 4
+
     # browser()
     ## Criando comparações dinamicamente
-    for(i in 2:cols){
+    for(i in starts_in:cols){
       ## Gerando tooltips
       ef_df_br <- func_create_tooltip_ef(
         ef_df_br, graph_type = 0, ef = F, flag_cmp = F, i, input_sel_period_name,

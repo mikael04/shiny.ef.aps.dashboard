@@ -12,6 +12,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Debug Secrets
+      run: |
+        echo "VPS_HOST: ${{ secrets.VPS_HOST }}"
+        echo "VPS_USER: ${{ secrets.VPS_USER }}"
+        echo "SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}"
     - name: Checkout code
       uses: actions/checkout@v2
     # Usar as actions via SSH para se conectar na VPS e rodar o script

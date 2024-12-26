@@ -1,0 +1,49 @@
+name: shiny.ef.aps.dashboard deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checar repositório
+      - name: Checando repositório
+        uses: actions/checkout@v3
+      run: echo Running script
+    # Usar as actions via SSH para se conectar na VPS e rodar o script
+      - name: Deploy na VPS via SSH
+        uses: appleboy/ssh-action@v0.1.11
+        with:
+          host: ${{ secrets.VPS_HOST }}           # e.g., IP address or domain of VPS
+          username: ${{ secrets.VPS_USER }}       # VPS username
+          key: ${{ secrets.SSH_DEPLOY_KEY }}      # The private key we stored in GitHub secrets
+          port: 22                                # Adjust if using non-standard SSH port
+          script: |
+            # Derrubando aplicação anterior
+            pid=$(ps aux | grep "Rscript.R" | awk '{print $2}')
+
+            # Verificando se o processo está aberto
+            if [ -n "$pid" ]; then
+              echo "Killing process with PID: $pid"
+              kill -9 $pid
+            else
+              echo "No matching process found."
+            fi
+
+            # Navigate to your project directory
+            cd /srv/shiny-server/shiny.ef.aps.dashboard/
+
+            # Pull the latest code from GitHub
+            git pull origin main
+
+            # Optionally install/refresh R packages if needed:
+            # Rscript -e "install.packages('remotes'); remotes::install_deps()"
+
+            # Run your R script
+            Rscript app.R

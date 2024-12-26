@@ -14,6 +14,18 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    # Verificando variávels de environment
+    - name: Print environment variables
+      run: |
+        echo "GITHUB_ENV: $GITHUB_ENV"
+        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+        echo "GITHUB_ACTIONS: $GITHUB_ACTIONS"
+    - name: Check GITHUB_ENV file
+      run: |
+        cat $GITHUB_ENV
+    - name: Check environment variables
+      run: |
+        env
     # Verificando secrets
     - name: Check VPS_HOST secret
       run: |

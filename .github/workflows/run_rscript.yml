@@ -13,43 +13,43 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    # Verificando secrets
-    - name: Check VPS_HOST secret
-      run: |
-        echo "VPS_HOST: $VPS_HOST"
-      env:
-        VPS_HOST: ${{ secrets.VPS_HOST }}
-    # Usar as actions via SSH para se conectar na VPS e rodar o script
-    - name: Deploy VPS
-      uses: easingthemes/ssh-deploy@main
-      with:
-        SSH_PRIVATE_KEY: ${{secrets.SERVER_SSH_KEY}}
-        ARGS: "-rlgoDzvc --delete"
-        REMOTE_HOST: ${{vars.VPS_HOST}}
-        REMOTE_USER: ${{vars.VPS_USER}}
-        REMOTE_PORT: 22
-        script: |
-          # Derrubando aplicação anterior
-          pid=$(ps aux | grep "Rscript.R" | awk '{print $2}')
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # Verificando secrets
+      - name: Check VPS_HOST secret
+        run: |
+          echo "VPS_HOST: $VPS_HOST"
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+      # Usar as actions via SSH para se conectar na VPS e rodar o script
+      - name: Deploy VPS
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{secrets.SERVER_SSH_KEY}}
+          ARGS: "-rlgoDzvc --delete"
+          REMOTE_HOST: ${{vars.VPS_HOST}}
+          REMOTE_USER: ${{vars.VPS_USER}}
+          REMOTE_PORT: 22
+          script: |
+            # Derrubando aplicação anterior
+            pid=$(ps aux | grep "Rscript.R" | awk '{print $2}')
 
-          # Verificando se o processo está aberto
-          if [ -n "$pid" ]; then
-            echo "Killing process with PID: $pid"
-            kill -9 $pid
-          else
-            echo "No matching process found."
-          fi
+            # Verificando se o processo está aberto
+            if [ -n "$pid" ]; then
+              echo "Killing process with PID: $pid"
+              kill -9 $pid
+            else
+              echo "No matching process found."
+            fi
 
-          # Navigate to your project directory
-          cd /srv/shiny-server/shiny.ef.aps.dashboard/
+            # Navigate to your project directory
+            cd /srv/shiny-server/shiny.ef.aps.dashboard/
 
-          # Pull the latest code from GitHub
-          git pull origin main
+            # Pull the latest code from GitHub
+            git pull origin main
 
-          # Optionally install/refresh R packages if needed:
-          # Rscript -e "install.packages('remotes'); remotes::install_deps()"
+            # Optionally install/refresh R packages if needed:
+            # Rscript -e "install.packages('remotes'); remotes::install_deps()"
 
-          # Run your R script
-          Rscript app.R
+            # Run your R script
+            Rscript app.R

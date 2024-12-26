@@ -35,7 +35,7 @@ jobs:
         script: |
           echo "Connected to VPS"
     - name: Deploy na VPS via SSH
-      uses: webfactory/ssh-action@v4.0.1
+      uses: appleboy/ssh-action@v1.2.0
       with:
           host: ${{ secrets.VPS_HOST }}           # e.g., IP address or domain of VPS
           username: ${{ secrets.VPS_USER }}       # VPS username

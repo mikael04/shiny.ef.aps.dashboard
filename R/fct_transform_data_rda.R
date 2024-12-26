@@ -65,7 +65,7 @@ func_transform_data_rda <- function(){
     dados_munic_uf_regiao_regsaude <- read.csv(here::here("data-raw/dados_territorio/dados_territorio.csv"))
 
     ## Buscando apenas dados de municípoios e ied
-    df_mun_ied <- data.table::fread(here::here("data-raw/efi_processos_2022_2023_eq.csv")) |>
+    df_mun_ied <- data.table::fread(here::here("data-raw/eficiencia_processos_corrigida_2022_2023.csv")) |>
       dplyr::select(cod_ibge = ibge, nome_mun,
                     ied = indice_de_equidade_e_dimensionamento_ied) |>
       dplyr::distinct(cod_ibge, .keep_all = T) |>
@@ -108,9 +108,9 @@ func_transform_data_rda <- function(){
                     quad_cod = (ano-2022)*3+quad) |>
       dplyr::select(cod_ibge, nome_mun = nome_mun.x, ano, ano_quad, quad_cod, ef_BCC, ef_CCR,
                     ## inputs
-                    desp_por_hab_cob = desp_por_eq_2,
+                    desp_final = desp_por_eq_2, #desp_por_hab_cob
                     ## Quanto falta nos inputs
-                    v_desp_por_hab_cob = v_desp_final,
+                    v_desp_final = v_desp_final,
                     ## outputs
                     ind1_gest, ind2_teste, ind3_odonto, ind4_cito,
                     ind5_vacina, ind6_hiper, ind7_diab,
@@ -141,9 +141,9 @@ func_transform_data_rda <- function(){
       dplyr::select(
         cod_ibge, nome_mun = nome_mun.x, ano, ano_quad, quad_cod, ef_BCC, ef_CCR,
         ## inputs
-        desp_por_hab_cob = desp_por_hab, eq_por_hab_cad = eq_por_hab,
+        desp_final = desp_por_hab, eq_por_hab_cad = eq_por_hab,
         ## Quanto falta nos inputs
-        v_desp_por_hab_cob = v_desp_por_hab, v_eq_por_hab_cad = v_eq_por_hab,
+        v_desp_final = v_desp_por_hab, v_eq_por_hab_cad = v_eq_por_hab,
         ## outputs
         tx_mort, tx_inter,
         ## Quanto falta nos outputs
@@ -198,9 +198,9 @@ func_transform_data_rda <- function(){
     ef_ufs_proc <- ef_muns_proc |>
       dplyr::select(CO_UF, nome_uf, ef_BCC, quad_cod,
                     ## inputs
-                    desp_por_hab_cob,
+                    desp_final,
                     ## Quanto falta nos inputs
-                    v_desp_por_hab_cob,
+                    v_desp_final,
                     ## outputs
                     ind1_gest, ind2_teste, ind3_odonto, ind4_cito,
                     ind5_vacina, ind6_hiper, ind7_diab,
@@ -224,9 +224,9 @@ func_transform_data_rda <- function(){
     ef_ufs_res <- ef_muns_res |>
       dplyr::select(CO_UF, nome_uf, ef_BCC, quad_cod,
                     ## inputs
-                    desp_por_hab_cob, eq_por_hab_cad,
+                    desp_final, eq_por_hab_cad,
                     ## Quanto falta nos inputs
-                    v_desp_por_hab_cob, v_eq_por_hab_cad,
+                    v_desp_final, v_eq_por_hab_cad,
                     ## outputs
                     tx_mort, tx_inter,
                     ## Quanto falta nos outputs
@@ -310,8 +310,6 @@ func_transform_data_rda <- function(){
     df_mapa_inicial_ufs_sf_res <- list_func_init_dfs_iniciais[[1]]
     df_tabela_inicial_ufs_res <- list_func_init_dfs_iniciais[[2]]
 
-    source("R/fct_aux_graph_lollipop_outputs_res.R")
-    source("R/fct_create_tooltip_ef.R")
     ## Gráficos iniciais
     list_func_init_grafs <- func_init_grafs(df_mapa_inicial_ufs_sf_res, df_tabela_inicial_ufs_res,
                                             ef_br_res, sel_period_res,

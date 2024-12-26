@@ -26,9 +26,9 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
     nome_area_cmp <- ef_df_tooltip$cmp_nome_mun
   }
   first_col <- ifelse(in_out_flag, i-1, i-3)
-  # browser()
+  browser()
   ## ef == T se já for eficiente
-  if(ef == T){
+  if(ef){
     ef_return <- ef_df_tooltip |>
       dplyr::mutate(
         tooltip_col = paste0(
@@ -42,7 +42,7 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
         eixo_x = in_out_names[first_col])
   }
   ## ef == F se não for eficiente
-  if(ef == F){
+  if(!ef){
     ## in_out_names i-3, temos 3 colunas iniciais, região geográfica, ef_bcc, quad_cod
     ef_return <- ef_df_tooltip |>
       dplyr::mutate(

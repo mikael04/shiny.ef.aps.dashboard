@@ -28,9 +28,10 @@ func_ui_panel <- function(session, id){
               ),
               div(
                 class = "seletor_ef",
-                tags$span(id="left", class="pointer", "PROCESSOS"),
-                shinyWidgets::materialSwitch(inputId = "seletor_ef", label = "", inline = TRUE),
-                tags$span(id="right", class="pointer", "RESULTADOS")
+                tags$span(id="left", class="pointer", "RESULTADOS"),
+                shinyWidgets::materialSwitch(inputId = "seletor_ef", label = "",
+                                             inline = TRUE, value = TRUE),
+                tags$span(id="right", class="pointer", "PROCESSOS")
               )
             ),
             selectizeInput(

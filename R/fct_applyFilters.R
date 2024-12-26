@@ -57,19 +57,19 @@ func_applyFilters <- function(
       dplyr::select(-row.names)
   }
 
-  ## Mudando conforme o seletor -> Se True, Resultados; Se False, Processos
+  ## Mudando conforme o seletor -> Se True, Processos; Se False, Resultados
   if(input_seletor_ef){
     # browser()
-    tab_title_ef <- "Resultados"
-    ef_proc_res <- F
-    sel_period <-(sel_period-2022)*3+1
-    ef_muns_period <- ef_muns_ano_res
-    ef_muns_ef <- ef_muns_res
-  }else{
     tab_title_ef <- "Processos"
     ef_proc_res <- T
     ef_muns_period <- ef_muns_quad_proc
     ef_muns_ef <- ef_muns_proc
+  }else{
+    tab_title_ef <- "Resultados"
+    ef_proc_res <- F
+    ef_muns_period <- ef_muns_ano_res
+    ef_muns_ef <- ef_muns_res
+    sel_period <-(sel_period-2022)*3+1
   }
 
   ## Município ----
@@ -143,6 +143,7 @@ func_applyFilters <- function(
       ## Mapa (da região de saúde) (ef_df_reg_saude_sel) ----
       ## Adicionando geometria
 
+      # browser()
       ef_muns_ef <- ef_muns_ef |>
         dplyr::filter(quad_cod == sel_period) |>
         dplyr::collect()

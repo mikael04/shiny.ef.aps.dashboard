@@ -18,9 +18,9 @@ func_transform_data_to_download <- function(ef_muns_proc, ef_muns_res){
       ## Dados de eficiência
       ef_BCC,
       ## Inputs
-      desp_por_hab_cob,
+      desp_final,
       ### Quanto falta nos inputs
-      v_desp_por_hab_cob,
+      v_desp_final,
       ## Outputs
       ind1_gest, ind2_teste, ind3_odonto, ind4_cito, ind5_vacina, ind6_hiper, ind7_diab,
       ### Quanto falta nos outputs
@@ -42,9 +42,9 @@ func_transform_data_to_download <- function(ef_muns_proc, ef_muns_res){
       ## Dados sociodemográficos
       pop_2022, ivs, faixa_porte_2022, ied,
       ## Inputs
-      desp_por_hab_cob, eq_por_hab_cad,
+      desp_final, eq_por_hab_cad,
       ## Quanto falta nos inputs
-      v_desp_por_hab_cob, v_eq_por_hab_cad,
+      v_desp_final, v_eq_por_hab_cad,
       ## Outputs
       tx_mort, tx_inter,
       ### Quanto falta nos outputs

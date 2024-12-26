@@ -31,6 +31,8 @@ app_server <- function(input, output, session) {
   flag_change_type <- reactiveVal(F)
   ### Se recém chamou o seletor de município ou região de saúde, ele chama novamente porque o próprio observe altera o input
   flag_mun_regsaude_first <- reactiveVal(F)
+  ### Newcase, atualizando a forma de calcular o gráfico de eficiência para novos dados
+  newcase <- T
   ## 0.1.1 Debug ----
   debug <- T
   read_data_rds <- F
@@ -173,12 +175,12 @@ app_server <- function(input, output, session) {
   ## Reativos porque podemos mudar a eficiência e consequentemente os gráficos e títulos
   # title_ef_def <- title_ef_def("Processos")
   ## Mapa do brasil
-  mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = T)
-  ## Tabela de eficiência das UFs
-  mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = T)
-  ### Inputs e outputs
-  mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                           initial_state = T, ef_proc_res = T, list_graphs_inputs_outputs = NULL)
+  # mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = T)
+  # ## Tabela de eficiência das UFs
+  # mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = T)
+  # ### Inputs e outputs
+  # mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+  #                                          initial_state = T, ef_proc_res = T, list_graphs_inputs_outputs = NULL)
   output$box_graf_ef <- renderUI({
     div(
       id = "graf-ef",
@@ -525,7 +527,7 @@ app_server <- function(input, output, session) {
       ### Inputs e outputs
       mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
                                                initial_state = F, ef_proc_res,
-                                               list_graphs_inputs_outputs)
+                                               list_graphs_inputs_outputs, newcase)
       shinyalert::closeAlert()
     }
   })
@@ -866,10 +868,42 @@ app_server <- function(input, output, session) {
   ## 5.2 Gráficos iniciais ----
   ### Título da caixa do mapa
   observeEvent(input$seletor_ef, {
-    # browser()
     ## Se for a versão inicial da aplicação, apenas alterar os gráficos
     if(initial_state() && input$type == "no_sel"){
-      ## Senão for a versão inicial da aplicação, apresentar popup para troca
+      if(input$seletor_ef){
+        updateSelectizeInput(session,
+                             "sel_period",
+                             label = "Selecione o quadrimestre:",
+                             choices = choices_quad, selected = choices_quad[nrow(df_quad)])
+        title_period = title_period(sel_period_name_quad)
+        ## Alterando gráficos iniciais
+        ## Mapa do brasil
+        mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = input$seletor_ef)
+        ## Tabela de eficiência das UFs
+        mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = input$seletor_ef)
+        ### Inputs e outputs
+        mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                                 initial_state = T, ef_proc_res = input$seletor_ef,
+                                                 list_graphs_inputs_outputs = NULL, newcase)
+
+      }else{
+        updateSelectizeInput(session,
+                             "sel_period",
+                             label = "Selecione ano:",
+                             choices = c("2022", "2023"), selected = "2023")
+        title_period = title_period(sel_period_name_ano)
+
+        ## Alterando gráficos iniciais
+        ## Mapa do brasil
+        mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = input$seletor_ef)
+        ## Tabela de eficiência das UFs
+        mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = input$seletor_ef)
+        ### Inputs e outputs
+        mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                                 initial_state = T, ef_proc_res = input$seletor_ef,
+                                                 list_graphs_inputs_outputs = NULL, newcase)
+      }
+    ## Senão for a versão inicial da aplicação, apresentar popup para troca
     }else{
       ## Alterando o título dos gráficos de eficiência
       if(!input$seletor_ef){
@@ -882,37 +916,6 @@ app_server <- function(input, output, session) {
                        first_test = "Você deseja trocar a eficiência?",
                        mid_text = " Ao trocar a eficiência, <b>os gráficos apresentados serão alterados.</b>",
                        end_text = " Se sim, </b>clique em 'Aplicar filtros'</b> novamente para ver os novos gráficos.")
-    }
-    if(!input$seletor_ef){
-      updateSelectizeInput(session,
-                           "sel_period",
-                           label = "Selecione o quadrimestre:",
-                           choices = choices_quad, selected = choices_quad[nrow(df_quad)])
-      title_period = title_period(sel_period_name_quad)
-      ## Alterando gráficos iniciais
-      ## Mapa do brasil
-      mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = F)
-      ## Tabela de eficiência das UFs
-      mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = F)
-      ### Inputs e outputs
-      mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                               initial_state = T, ef_proc_res = F, list_graphs_inputs_outputs = NULL)
-
-    }else{
-      updateSelectizeInput(session,
-                           "sel_period",
-                           label = "Selecione ano:",
-                           choices = c("2022", "2023"), selected = "2023")
-      title_period = title_period(sel_period_name_ano)
-
-      ## Alterando gráficos iniciais
-      ## Mapa do brasil
-      mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = T)
-      ## Tabela de eficiência das UFs
-      mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = T)
-      ### Inputs e outputs
-      mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                               initial_state = T, ef_proc_res = T, list_graphs_inputs_outputs = NULL)
     }
   })
   ## Versão inicial da aplicação dos títulos de mapa e gráfico de eficiência

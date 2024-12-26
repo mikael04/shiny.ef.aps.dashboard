@@ -85,14 +85,14 @@ func_aux_graph_lollipop_input_proc_1 <- function(
   }
   ## Municípios
   if(graph_type == 2){
-    # browser()
+    browser()
     ef_df_mun_sel <- ef_df |>
-      dplyr::select(c(2, 8:11))
+      dplyr::select(nome-mun, starts_with("desp"), starts_with("v_desp"))
 
     if(flag_cmp){
       ## Selecionando colunas de output
       ef_df_mun_cmp <- ef_df_cmp |>
-        dplyr::select(c(2, 8:11))
+        dplyr::select(nome-mun, starts_with("desp"), starts_with("v_desp"))
 
       ## Nome das colunas
       cols_names_cmp <- colnames(ef_df_mun_cmp)

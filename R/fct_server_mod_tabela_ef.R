@@ -59,7 +59,6 @@ func_server_mod_tabela_ef <- function(
       df_tabela <- func_order_by_ef_sel(df_tabela, ef_proc_res)
     }
   }
-
   ## Sem miniplot ----
   if(!with_miniplot){
     if(flag_brasil){
@@ -69,8 +68,8 @@ func_server_mod_tabela_ef <- function(
     }
     if(flag_mun){
       df_tabela_quad_sel <- df_tabela |>
-        dplyr::select(tidyr::ends_with(paste0(type_ef, "_", sel_period))) |>
-        dplyr::rename(ef_BCC = 1)
+        # dplyr::select(tidyr::ends_with(paste0(type_ef, "_", sel_period))) |>
+        dplyr::select(ef_BCC = processos_1)
 
       ## Unindo novamente com a base, para termos o valor atual separado
       df_tabela <- dplyr::bind_cols(df_tabela, df_tabela_quad_sel) |>

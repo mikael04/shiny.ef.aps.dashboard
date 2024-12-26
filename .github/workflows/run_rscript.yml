@@ -15,18 +15,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    # Verificando variávels de environment
-    - name: Print environment variables
-      run: |
-        echo "GITHUB_ENV: $GITHUB_ENV"
-        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-        echo "GITHUB_ACTIONS: $GITHUB_ACTIONS"
-    - name: Check GITHUB_ENV file
-      run: |
-        cat $GITHUB_ENV
-    - name: Check environment variables
-      run: |
-        env
     # Verificando secrets
     - name: Check VPS_HOST secret
       run: |
@@ -34,46 +22,34 @@ jobs:
       env:
         VPS_HOST: ${{ secrets.VPS_HOST }}
     # Usar as actions via SSH para se conectar na VPS e rodar o script
-    - name: Check VPS connection
-      uses: appleboy/ssh-action@v1.2.0
-      env:
-        VPS_HOST: ${{ secrets.VPS_HOST }}
-        VPS_USER: ${{ secrets.VPS_USER }}
-        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+    - name: Deploy VPS
+      uses: easingthemes/ssh-deploy@main
       with:
-        host: $VPS_HOST
-        username: $VPS_USER
-        key: $SSH_DEPLOY_KEY
-        port: 22
+        SSH_PRIVATE_KEY: ${{secrets.SERVER_SSH_KEY}}
+        ARGS: "-rlgoDzvc --delete"
+        REMOTE_HOST: ${{vars.VPS_HOST}}
+        REMOTE_USER: ${{vars.VPS_USER}}
+        REMOTE_PORT: 22
         script: |
-          echo "Connected to VPS"
-    - name: Deploy na VPS via SSH
-      uses: appleboy/ssh-action@v1.2.0
-      with:
-          host: ${{ secrets.VPS_HOST }}           # e.g., IP address or domain of VPS
-          username: ${{ secrets.VPS_USER }}       # VPS username
-          key: ${{ secrets.SSH_DEPLOY_KEY }}      # The private key we stored in GitHub secrets
-          port: 22                                # Adjust if using non-standard SSH port
-          script: |
-            # Derrubando aplicação anterior
-            pid=$(ps aux | grep "Rscript.R" | awk '{print $2}')
+          # Derrubando aplicação anterior
+          pid=$(ps aux | grep "Rscript.R" | awk '{print $2}')
 
-            # Verificando se o processo está aberto
-            if [ -n "$pid" ]; then
-              echo "Killing process with PID: $pid"
-              kill -9 $pid
-            else
-              echo "No matching process found."
-            fi
+          # Verificando se o processo está aberto
+          if [ -n "$pid" ]; then
+            echo "Killing process with PID: $pid"
+            kill -9 $pid
+          else
+            echo "No matching process found."
+          fi
 
-            # Navigate to your project directory
-            cd /srv/shiny-server/shiny.ef.aps.dashboard/
+          # Navigate to your project directory
+          cd /srv/shiny-server/shiny.ef.aps.dashboard/
 
-            # Pull the latest code from GitHub
-            git pull origin main
+          # Pull the latest code from GitHub
+          git pull origin main
 
-            # Optionally install/refresh R packages if needed:
-            # Rscript -e "install.packages('remotes'); remotes::install_deps()"
+          # Optionally install/refresh R packages if needed:
+          # Rscript -e "install.packages('remotes'); remotes::install_deps()"
 
-            # Run your R script
-            Rscript app.R
+          # Run your R script
+          Rscript app.R

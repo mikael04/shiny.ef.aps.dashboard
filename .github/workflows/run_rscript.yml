@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v2
     # Usar as actions via SSH para se conectar na VPS e rodar o script
     - name: Deploy na VPS via SSH
-      uses: appleboy/ssh-action@v0.1.11
+      uses: appleboy/ssh-action@v1.2.0
       with:
           host: ${{ secrets.VPS_HOST }}           # e.g., IP address or domain of VPS
           username: ${{ secrets.VPS_USER }}       # VPS username

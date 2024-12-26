@@ -12,13 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checando repositório
-        uses: actions/checkout@v3
-      run: echo Running script
+    - name: Checkout code
+      uses: actions/checkout@v2
     # Usar as actions via SSH para se conectar na VPS e rodar o script
-      - name: Deploy na VPS via SSH
-        uses: appleboy/ssh-action@v0.1.11
-        with:
+    - name: Deploy na VPS via SSH
+      uses: appleboy/ssh-action@v0.1.11
+      with:
           host: ${{ secrets.VPS_HOST }}           # e.g., IP address or domain of VPS
           username: ${{ secrets.VPS_USER }}       # VPS username
           key: ${{ secrets.SSH_DEPLOY_KEY }}      # The private key we stored in GitHub secrets

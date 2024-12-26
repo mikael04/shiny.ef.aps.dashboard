@@ -14,7 +14,26 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    # Verificando secrets
+    - name: Check VPS_HOST secret
+      run: |
+        echo "VPS_HOST: $VPS_HOST"
+      env:
+        VPS_HOST: ${{ secrets.VPS_HOST }}
     # Usar as actions via SSH para se conectar na VPS e rodar o script
+    - name: Check VPS connection
+      uses: appleboy/ssh-action@v1.2.0
+      env:
+        VPS_HOST: ${{ secrets.VPS_HOST }}
+        VPS_USER: ${{ secrets.VPS_USER }}
+        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+      with:
+        host: $VPS_HOST
+        username: $VPS_USER
+        key: $SSH_DEPLOY_KEY
+        port: 22
+        script: |
+          echo "Connected to VPS"
     - name: Deploy na VPS via SSH
       uses: webfactory/ssh-action@v4.0.1
       with:

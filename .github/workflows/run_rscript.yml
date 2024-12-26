@@ -27,8 +27,8 @@ jobs:
         with:
           SSH_PRIVATE_KEY: ${{secrets.SERVER_SSH_KEY}}
           ARGS: "-rlgoDzvc --delete"
-          REMOTE_HOST: ${{vars.VPS_HOST}}
-          REMOTE_USER: ${{vars.VPS_USER}}
+          REMOTE_HOST: 45.231.133.242
+          REMOTE_USER: root
           REMOTE_PORT: 22
           script: |
             # Derrubando aplicação anterior

@@ -6,5 +6,5 @@
 #'
 #' @noRd
 utils_environment_config <- function() {
-  config::get("run_settings", file = "inst/golem-config.yml")
+  config::get("run_settings", file = "../shiny.ef.aps.dashboard.config/golem-config.yml")
 }

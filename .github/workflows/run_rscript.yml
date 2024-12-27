@@ -38,7 +38,7 @@ jobs:
             echo "Creating .Renviron"
             cat <<EOF > .Renviron
             # .Renviron
-            R_CONFIG_ACTIVE=development_local
+            R_CONFIG_ACTIVE=production
             EOF
 
             echo "Stopping old R process..."

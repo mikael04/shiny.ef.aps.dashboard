@@ -6,7 +6,7 @@
 #'
 #' @noRd
 utils_db_config <- function() {
-  config::get("db", file = "inst/golem-config.yml")
+  config::get("db", file = "../shiny.ef.aps.dashboard.config/golem-config.yml")
 }
 
 utils_db_connect <- function() {

@@ -4,6 +4,7 @@
 
 pkgload::load_all(export_all = FALSE,helpers = FALSE,attach_testthat = FALSE)
 source("R/utils_environment.R")
+print(paste0("Working directory = ", getwd()))
 env_settings <- utils_environment_config() ##utils_environtment
 print(paste0("Env = ", Sys.getenv("R_CONFIG_ACTIVE")))
 print(paste0("Prod = ", env_settings$prod))

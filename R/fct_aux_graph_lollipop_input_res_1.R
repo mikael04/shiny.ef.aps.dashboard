@@ -72,14 +72,14 @@ func_aux_graph_lollipop_input_res_1 <- function(
   }
   ## Municípios
   if(graph_type == 2){
-    # browser()
+    browser()
     ef_df_mun_sel <- ef_df |>
-      dplyr::select(c(2, 8:11))
+      dplyr::select(nome_mun, desp_final, v_desp_final)
 
     if(flag_cmp){
       ## Selecionando colunas de output
       ef_df_mun_cmp <- ef_df_cmp |>
-        dplyr::select(c(2, 8:11))
+        dplyr::select(nome_mun, desp_final, v_desp_final)
 
       ## Nome das colunas
       cols_names_cmp <- colnames(ef_df_mun_cmp)
@@ -96,12 +96,13 @@ func_aux_graph_lollipop_input_res_1 <- function(
 
     ## Gráfico Despesas por hab. coberto -----
     i <- 2
-    ## Quantas colunas terá que pular para ter o valor que falta para eficiência
-    cols_jump <- 2
+    ###  Quantas colunas terá que pular para ter o valor que falta para eficiência
+    ### (como é apenas uma variável, é a próxima)
+    cols_jump <- 1
     # browser()
     ## Aqui comparamos se existe um valor que a área geográfica precisa melhorar para o output
     ## Se == 0, significa que já é eficiente
-    if(ef_df_mun_sel[[1, i+2]] == 0){
+    if(ef_df_mun_sel[[1, i+cols_jump]] == 0){
       # ef_df_mun_sel <- ef_df_mun_sel |>
       #   dplyr::mutate(tooltip_col = paste0("Município: ", "<b>", nome_mun, "</b>", "\n",
       #                                      "Valor: ", "<b>", round(!!as.name(cols_names[i]),2), "</b>", "\n",
@@ -121,7 +122,7 @@ func_aux_graph_lollipop_input_res_1 <- function(
         ggplot2::expand_limits(x = 0, y = 0)
     }
     ## Se != 0, significa que não é eficiente e precisa melhorar
-    if(ef_df_mun_sel[[1, i+2]] != 0){
+    if(ef_df_mun_sel[[1, i+cols_jump]] != 0){
       # ef_df_mun_sel <- ef_df_mun_sel |>
       #   dplyr::mutate(tooltip_col = paste0("Município: ", "<b>", nome_mun, "</b>", "\n",
       #                                      "índice de entrada: ", "<b>", input_names_clean[i-1], "</b>", ".\n",

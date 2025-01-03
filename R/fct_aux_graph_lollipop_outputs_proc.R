@@ -29,7 +29,7 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
     ## Selecionando colunas de output e último quadrimestre
     ef_df_br <- ef_df |>
       # dplyr::filter(quad_cod == quad_sel) |>
-      dplyr::select(1, ef_BCC, quad_cod, starts_with("ind"), starts_with("v_ind"))
+      dplyr::select(1, starts_with("ind"), starts_with("v_ind"))
 
     cols_names <- colnames(ef_df_br)
 
@@ -58,7 +58,7 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
     cols_names <- colnames(ef_df_br)
 
     ## parâmetro que irá definir qual a primeira coluna de output
-    starts_in <- 4
+    starts_in <- 2
 
     # browser()
     ## Criando comparações dinamicamente
@@ -84,15 +84,15 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
   }
   ## Gráfico de eficiencia do município ----
   if(graph_type == 2){
-    browser()
+    # browser()
     ## Selecionando colunas de output
     ef_df_mun_sel <- ef_df |>
-      dplyr::select(1, ef_BCC, quad_cod, starts_with("ind"), starts_with("v_ind"))
+      dplyr::select(nome_mun, starts_with("ind"), starts_with("v_ind"))
 
     if(flag_cmp){
       ## Selecionando colunas de output
       ef_df_mun_cmp <- ef_df_cmp |>
-        dplyr::select(c(2, 11:17))
+        dplyr::select(nome_mun, starts_with("desp"), starts_with("v_desp"))
 
       ## Nome das colunas
       cols_names_cmp <- colnames(ef_df_mun_cmp)
@@ -104,6 +104,8 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
       ## Adicionando colunas ao df do mun selecionado
       ef_df_mun_sel <- cbind(ef_df_mun_sel, ef_df_mun_cmp)
     }
+    ef_df_mun_sel <- ef_df_mun_sel |>
+      dplyr::rename(nome_area = nome_mun)
 
     ## Nome das colunas
     cols_names <- colnames(ef_df_mun_sel)
@@ -131,7 +133,7 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
     }
 
     ## parâmetro que irá definir qual a primeira coluna de output
-    starts_in <- 4
+    starts_in <- 2
 
     ## Criando camadas de linhas e pontos conforme colunas de outputs
     for(i in starts_in:cols){

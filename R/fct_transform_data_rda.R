@@ -79,7 +79,7 @@ func_transform_data_rda <- function(){
       dplyr::left_join(df_mun_ied, by = c("cod_ibge", "nome_mun", "nome_uf")) |>
       dplyr::mutate(has_data_proc = ifelse(is.na(ied), F, T))
 
-    df_mun_ied_res <- data.table::fread(here::here("data-raw/efi_resultados_2022_2023_eq.csv")) |>
+    df_mun_ied_res <- data.table::fread(here::here("data-raw/eficiencia_resultados_corrigida_2022_2023.csv")) |>
       dplyr::select(cod_ibge = ibge, nome_mun,
                     ied = indice_de_equidade_e_dimensionamento_ied) |>
       dplyr::distinct(cod_ibge, .keep_all = T) |>

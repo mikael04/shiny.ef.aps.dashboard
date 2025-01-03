@@ -23,7 +23,7 @@ func_server_mod_graph_lollipop_inputs_outputs <- function(
 
   ## Testa true, roda ef de processos
   if(ef_proc_res){
-    browser()
+    # browser()
     ## Gerencia os tipos de gráficos de inputs
     graph_input_1 <- func_aux_graph_lollipop_input_proc_1(graph_type, input_sel_period_name, ef_df,
                                                           flag_cmp,

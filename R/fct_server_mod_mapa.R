@@ -59,6 +59,9 @@ func_server_mod_mapa <- function(ef_df, map_type, mun_sel, nome_mun_sel, title_e
   ## map_type 2 ou 3 -> Mapa do município ou da região de saúde
   if(map_type == 1 || map_type == 2 || map_type == 3){
     # browser()
+    ## Arredondando valores para 2 casas decimais
+    ef_df <- ef_df |>
+      dplyr::mutate(!!as.name(var_ef) := round(!!as.name(var_ef), 2))
     ## Tooltip
     ef_df <- ef_df |>
       dplyr::mutate(tooltip = paste0("<b>", nome_mun, "</b>", "\n",

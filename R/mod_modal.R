@@ -21,7 +21,7 @@ mod_modal_server <- function(id, title, first_test, mid_text, end_text){
     ns <- session$ns
     showModal(modalDialog(
       title = title,
-      HTML(class="span", paste0(first_test, mid_text, end_text)),
+      HTML(paste0(first_test, mid_text, end_text)),
       footer = modalButton("Fechar"),
       easyClose = TRUE
     ))

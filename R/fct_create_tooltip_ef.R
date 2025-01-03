@@ -12,6 +12,7 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
                                    cols_names, cols_jump){
   if(F){
     ef_df_tooltip <- ef_df_mun_sel
+    # ef_df_tooltip <- ef_df_br
     graph_type <- 2
     ef <- F
     i <- 2
@@ -25,8 +26,8 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
     cols_jump <- cols_jump
     nome_area_cmp <- ef_df_tooltip$cmp_nome_mun
   }
-  first_col <- ifelse(in_out_flag, i-1, i-3)
-  browser()
+  first_col <- i-1
+  # browser()
   ## ef == T se já for eficiente
   if(ef){
     ef_return <- ef_df_tooltip |>

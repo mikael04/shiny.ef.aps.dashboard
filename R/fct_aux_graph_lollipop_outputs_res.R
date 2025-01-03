@@ -29,7 +29,7 @@ func_aux_graph_lollipop_outputs_res <- function(
     ## Selecionando colunas de output e último quadrimestre
     ef_df_br <- ef_df |>
       # dplyr::filter(quad_cod == quad_sel) |>
-      dplyr::select(1, ef_BCC, quad_cod, starts_with("tx_"), starts_with("v_tx"))
+      dplyr::select(nome_area = 1, starts_with("tx_"), starts_with("v_tx"))
 
     cols_names <- colnames(ef_df_br)
 
@@ -59,7 +59,8 @@ func_aux_graph_lollipop_outputs_res <- function(
     cols_names <- colnames(ef_df_br)
 
     ## parâmetro que irá definir qual a primeira coluna de output
-    starts_in <- 4
+    starts_in <- 2
+    # i <- starts_in
 
     # browser()
     ## Criando comparações dinamicamente
@@ -87,16 +88,16 @@ func_aux_graph_lollipop_outputs_res <- function(
   if(graph_type == 2){
     browser()
     ## Selecionando colunas de output
-    cols_init <- 12
-    col_end <- cols_init-1+length(output_names)*2
+    # cols_init <- 12
+    # col_end <- cols_init-1+length(output_names)*2
     ef_df_mun_sel <- ef_df |>
-      dplyr::select(1, ef_BCC, quad_cod, starts_with("tx_"), starts_with("v_tx"))
+      dplyr::select(nome_area = 2, starts_with("tx_"), starts_with("v_tx"))
 
     if(flag_cmp){
       # browser()
       ## Selecionando colunas de output
       ef_df_mun_cmp <- ef_df_cmp |>
-        dplyr::select(c(2, cols_init:col_end))
+        dplyr::select(nome_area = 2, starts_with("tx_"), starts_with("v_tx"))
 
       ## Nome das colunas
       cols_names_cmp <- colnames(ef_df_mun_cmp)
@@ -135,7 +136,7 @@ func_aux_graph_lollipop_outputs_res <- function(
     }
 
     ## parâmetro que irá definir qual a primeira coluna de output
-    starts_in <- 4
+    starts_in <- 2
 
     ## Criando camadas de linhas e pontos conforme colunas de outputs
     for(i in starts_in:cols){

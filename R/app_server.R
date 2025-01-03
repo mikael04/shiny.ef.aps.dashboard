@@ -647,11 +647,12 @@ app_server <- function(input, output, session) {
   observeEvent(input$sel_uf_2, {
     # browser()
     ## Filtrando a faixa (ied)
-    ied_mun_sel <- func_get_mun_ied(df_mun_ied, input$sel_uf_1, input$sel_mun_1)
+    ### Não será mais filtrado por ied, calculo de eficiencia já faz
+    # ied_mun_sel <- func_get_mun_ied(df_mun_ied, input$sel_uf_1, input$sel_mun_1)
     ## Município
     if(input$type == "mun"){
       ## filter_uf_ied == 10 -> Não filtrar por IED, filter_uf_ied == 11, filtrar por ied
-      filter_ied_sel <- ifelse(filt_eq(), 11, 10)
+      filter_ied_sel <- ifelse(F, 11, 10)
       func_att_selector_type_cmp_uf_faixa(session, output, "sel_mun_2", input$sel_uf_2, df_mun_ied,
                                           mun_regsaude = 1, ied_mun_sel, filter_ied = filter_ied_sel,
                                           debug)
@@ -664,32 +665,32 @@ app_server <- function(input, output, session) {
   })
   ### 4.3.1 Equidade -----
   ### Reatividade botão filtro de equidade
-  observeEvent(input$filtro_eq, {
-    # browser()
-    filt_eq <- reactiveVal(input$filtro_eq)
-    ## Se botão de comparação estiver ativo
-    # browser()
-    if(isTruthy(input$cmp_1)){
-      ## Se for comparação de municípios
-      if(input$type == "mun"){
-        ## Se o filtro estiver ativado, passar 11 (filtrar por ied), senão passar 10 (não filtrar)
-        filter_ied_sel <- ifelse(filt_eq(), 11, 10)
-        # browser()
-        ## se o filtro estiver ativado, passar o ied do município selecionado, senão passar 0
-        ied_mun_sel_f <- ifelse(filter_ied_sel == 11, func_get_mun_ied(df_mun_ied, input$sel_uf_1, input$sel_mun_1), 0)
-        func_att_selector_type_cmp_uf_faixa(session, output, "sel_mun_2", input$sel_uf_2, df_mun_ied,
-                                            mun_regsaude = 1, ied_mun_sel = ied_mun_sel_f, filter_ied = filter_ied_sel,
-                                            debug)
-      }
-    }
-    if(!isTruthy(filt_eq())){
-      mod_modal_server("modal_1",
-                       title = "Filtro de equidade",
-                       first_test = "O filtro de equidade foi desativado. ",
-                       mid_text = "Agora você poderá comparar o município selecionado com qualquer outro município. Caso deseje ativar o filtro novamente, clique no botão de comparação. ",
-                       end_text = "Por favor, esteja ciente de que esta comparação não leva em conta a metodologia utilizada no trabalho para <b>a comparação</b> de municípios, portanto <b>pode não ser justa.</b>")
-    }
-  })
+  # observeEvent(input$filtro_eq, {
+  #   # browser()
+  #   filt_eq <- reactiveVal(input$filtro_eq)
+  #   ## Se botão de comparação estiver ativo
+  #   # browser()
+  #   if(isTruthy(input$cmp_1)){
+  #     ## Se for comparação de municípios
+  #     if(input$type == "mun"){
+  #       ## Se o filtro estiver ativado, passar 11 (filtrar por ied), senão passar 10 (não filtrar)
+  #       filter_ied_sel <- ifelse(filt_eq(), 11, 10)
+  #       # browser()
+  #       ## se o filtro estiver ativado, passar o ied do município selecionado, senão passar 0
+  #       ied_mun_sel_f <- ifelse(filter_ied_sel == 11, func_get_mun_ied(df_mun_ied, input$sel_uf_1, input$sel_mun_1), 0)
+  #       func_att_selector_type_cmp_uf_faixa(session, output, "sel_mun_2", input$sel_uf_2, df_mun_ied,
+  #                                           mun_regsaude = 1, ied_mun_sel = ied_mun_sel_f, filter_ied = filter_ied_sel,
+  #                                           debug)
+  #     }
+  #   }
+  #   if(!isTruthy(filt_eq())){
+  #     mod_modal_server("modal_1",
+  #                      title = "Filtro de equidade",
+  #                      first_test = "O filtro de equidade foi desativado. ",
+  #                      mid_text = "Agora você poderá comparar o município selecionado com qualquer outro município. Caso deseje ativar o filtro novamente, clique no botão de comparação. ",
+  #                      end_text = "Por favor, esteja ciente de que esta comparação não leva em conta a metodologia utilizada no trabalho para <b>a comparação</b> de municípios, portanto <b>pode não ser justa.</b>")
+  #   }
+  # })
 
   ## Reatividade da caixa de seleção de comparação,
   ## Agora como ao mudar o município selecionado, também precisamos mudar os municípios de comparação

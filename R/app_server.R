@@ -23,6 +23,8 @@ app_server <- function(input, output, session) {
   title_map_tab_loc <- reactiveVal("nas UFs")
   title_ef_loc <- reactiveVal(paste0(
     "no <span style=color:#006400><b>", "Brasil", "</b></span>"))
+  subtitle_metricas_ef <- reactiveVal("Processos")
+  subtitle_metricas_period <- reactiveVal("no período")
   flag_cmp <- F
   ef_df_cmp <- NULL
   ### Filtro de equidade
@@ -220,7 +222,7 @@ app_server <- function(input, output, session) {
         span(HTML(paste0("Métricas de Eficiência "))),
         span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
         br(),
-        span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+        span(class = "subtitle", ifelse(!input$seletor_ef, HTML(paste0("De <b>Processos</b>", "no período ")), HTML(paste0("De <b>Resultados</b>", "no ano "))), title_period())
     )
   })
   ## 2.2 Títulos reativos, adição/remoção do gráfico de eficiência  ----
@@ -239,7 +241,7 @@ app_server <- function(input, output, session) {
           span(HTML(paste0("Métricas de Eficiência "))),
           span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
           br(),
-          span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+          span(class = "subtitle", ifelse(!input$seletor_ef, HTML(paste0("De <b>Processos</b>", "no período ")), HTML(paste0("De <b>Resultados</b>", "no ano "))), title_period())
       )
     })
     ## Criando gráfico de eficiência ou apenas box vazio
@@ -868,6 +870,16 @@ app_server <- function(input, output, session) {
   ## 5.2 Gráficos iniciais ----
   ### Título da caixa do mapa
   observeEvent(input$seletor_ef, {
+    ## Alterando o título dos gráficos de eficiência
+    if(!input$seletor_ef){
+      title_ef_def <- title_ef_def("Resultados")
+      subtitle_metricas_period = subtitle_metricas_period("no ano")
+      title_period = title_period(sel_period_name_ano)
+    }else{
+      title_ef_def <- title_ef_def("Processos")
+      subtitle_metricas_period = subtitle_metricas_period("no período")
+      title_period = title_period(sel_period_name_quad)
+    }
     ## Se for a versão inicial da aplicação, apenas alterar os gráficos
     if(initial_state() && input$type == "no_sel"){
       if(input$seletor_ef){
@@ -891,7 +903,6 @@ app_server <- function(input, output, session) {
                              "sel_period",
                              label = "Selecione ano:",
                              choices = c("2022", "2023"), selected = "2023")
-        title_period = title_period(sel_period_name_ano)
 
         ## Alterando gráficos iniciais
         ## Mapa do brasil
@@ -905,13 +916,6 @@ app_server <- function(input, output, session) {
       }
     ## Senão for a versão inicial da aplicação, apresentar popup para troca
     }else{
-      ## Alterando o título dos gráficos de eficiência
-      if(!input$seletor_ef){
-        title_ef_def <- title_ef_def("Processos")
-
-      }else{
-        title_ef_def <- title_ef_def("Resultados")
-      }
       mod_modal_server("modal_2", title = "Troca de eficiência",
                        first_test = "Você deseja trocar a eficiência?",
                        mid_text = " Ao trocar a eficiência, <b>os gráficos apresentados serão alterados.</b>",
@@ -932,7 +936,8 @@ app_server <- function(input, output, session) {
         span(HTML(paste0("Métricas de Eficiência "))),
         span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
         br(),
-        span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+        # span(class = "subtitle", ifelse(!input$seletor_ef, HTML(paste0("De <b>Processos</b>", "no período ")), HTML(paste0("De <b>Resultados</b>", "no ano "))), title_period())
+        span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
     )
   })
   ## Versões reativas
@@ -951,7 +956,7 @@ app_server <- function(input, output, session) {
           span(HTML(paste0("Métricas de Eficiência "))),
           span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
           br(),
-          span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+          span(class = "subtitle", ifelse(!input$seletor_ef, HTML(paste0("De <b>Processos</b>", "no período ")), HTML(paste0("De <b>Resultados</b>", "no ano "))), title_period())
       )
     })
     if(initial_state()){

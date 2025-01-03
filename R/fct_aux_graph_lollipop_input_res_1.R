@@ -72,14 +72,14 @@ func_aux_graph_lollipop_input_res_1 <- function(
   }
   ## Municípios
   if(graph_type == 2){
-    browser()
+    # browser()
     ef_df_mun_sel <- ef_df |>
       dplyr::select(nome_mun, desp_final, v_desp_final)
 
     if(flag_cmp){
       ## Selecionando colunas de output
       ef_df_mun_cmp <- ef_df_cmp |>
-        dplyr::select(nome_mun, desp_final, v_desp_final)
+        dplyr::select(nome_mun, desp_final)
 
       ## Nome das colunas
       cols_names_cmp <- colnames(ef_df_mun_cmp)
@@ -157,7 +157,7 @@ func_aux_graph_lollipop_input_res_1 <- function(
                                         shape = 21, colour = "black", fill = "#FF8C00", size = 4, inherit.aes = F) +
         ggplot2::expand_limits(x = 0, y = 0)
     }
-    # ggiraph::girafe(ggobj = graph_lollipop_desp)
+    ggiraph::girafe(ggobj = graph_lollipop_desp)
   }
   return(graph_lollipop_desp)
 }

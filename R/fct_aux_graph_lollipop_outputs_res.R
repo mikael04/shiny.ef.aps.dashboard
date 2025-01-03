@@ -86,7 +86,7 @@ func_aux_graph_lollipop_outputs_res <- function(
   }
   ## Gráfico de eficiencia do município ----
   if(graph_type == 2){
-    browser()
+    # browser()
     ## Selecionando colunas de output
     # cols_init <- 12
     # col_end <- cols_init-1+length(output_names)*2
@@ -97,7 +97,7 @@ func_aux_graph_lollipop_outputs_res <- function(
       # browser()
       ## Selecionando colunas de output
       ef_df_mun_cmp <- ef_df_cmp |>
-        dplyr::select(nome_area = 2, starts_with("tx_"), starts_with("v_tx"))
+        dplyr::select(nome_area = 2, starts_with("tx_"))
 
       ## Nome das colunas
       cols_names_cmp <- colnames(ef_df_mun_cmp)
@@ -132,7 +132,7 @@ func_aux_graph_lollipop_outputs_res <- function(
     cols_jump <- length(output_names)
     cols = ncol(ef_df_mun_sel)-cols_jump
     if(flag_cmp){
-      cols = cols-cols_jump*2-1
+      cols = cols-length(cols_names_cmp)
     }
 
     ## parâmetro que irá definir qual a primeira coluna de output
@@ -154,7 +154,7 @@ func_aux_graph_lollipop_outputs_res <- function(
         ## ef == T se já for eficiente
         ef_df_mun_sel <- func_create_tooltip_ef(
           ef_df_mun_sel, graph_type, ef = T, flag_cmp, i, input_sel_period_name,
-          ef_df_mun_sel$nome_mun, ef_df_mun_sel$cmp_nome_mun,
+          ef_df_mun_sel$nome_area, ef_df_mun_sel$cmp_nome_area,
           in_out_flag, output_names, output_names_clean, cols_names, cols_jump)
 
         ## Montando gráfico com única camada, pois município já é eficiente e não precisa ser comparado
@@ -176,7 +176,7 @@ func_aux_graph_lollipop_outputs_res <- function(
         ## ef == F se já for eficiente
         ef_df_mun_sel <- func_create_tooltip_ef(
           ef_df_mun_sel, graph_type, ef = F, flag_cmp, i, input_sel_period_name,
-          ef_df_mun_sel$nome_mun, ef_df_mun_sel$cmp_nome_mun,
+          ef_df_mun_sel$nome_area, ef_df_mun_sel$cmp_nome_area,
           in_out_flag, output_names, output_names_clean, cols_names, cols_jump)
 
         ## Montando gráfico com três camada, pois município já não é eficiente e precisa ser comparado

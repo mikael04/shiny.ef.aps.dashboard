@@ -25,7 +25,7 @@ func_applyFilters <- function(
     # func_aux_graph_lollipop_outputs_proc_2,
     # func_create_tooltip_ef
     ){
-  browser()
+  # browser()
   # Formato novo, usando a seleção por quadrimestres, apenas calculando valores
   # para passar por parâmetro
   if(tipo_quad){
@@ -143,7 +143,7 @@ func_applyFilters <- function(
       ## Mapa (da região de saúde) (ef_df_reg_saude_sel) ----
       ## Adicionando geometria
 
-      browser()
+      # browser()
       ## Buscando dados do municipio selecionado
       ef_muns_ef <- ef_muns_ef |>
         dplyr::filter(quad_cod == sel_period) |>
@@ -189,7 +189,7 @@ func_applyFilters <- function(
       # ### Outputs
       # mod_graph_lollipop_outputs_server("graph_lollipop_outputs_1", graph_type, sel_period, ef_mun_sel, flag_cmp = F, ef_df_cmp = NULL)
 
-      browser()
+      # browser()
       ## Função que criará o gráfico do tipo lollipop de eficiências
       list_graphs_inputs_outputs <- func_server_mod_graph_lollipop_inputs_outputs(
         graph_type, input_sel_period_name, ef_mun_sel,

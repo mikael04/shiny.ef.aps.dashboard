@@ -53,22 +53,6 @@ func_aux_graph_lollipop_input_proc_1 <- function(
       in_out_flag, input_names, input_names_clean,
       cols_names, cols_jump)
 
-    if(flag_cmp){
-      ## Selecionando colunas de output
-      ef_df_cmp_ <- ef_df_cmp |>
-        dplyr::select(c(2, 12:18))
-
-      ## Nome das colunas
-      cols_names_cmp <- colnames(ef_df_cmp_)
-
-      ## Renomeando para não ter conflito
-      ef_df_cmp_ <- ef_df_cmp_ |>
-        dplyr::rename_with(~paste0("cmp_", cols_names_cmp), everything())
-
-      ## Adicionando colunas ao df do mun selecionado
-      ef_df_br <- cbind(ef_df_br, ef_df_cmp_)
-    }
-
     ### Gráfico
     graph_lollipop_desp <- graph_lollipop +
       ggiraph::geom_segment_interactive(data = ef_df_br, aes(x = eixo_x, xend = eixo_x,
@@ -168,7 +152,7 @@ func_aux_graph_lollipop_input_proc_1 <- function(
                                         shape = 21, colour = "black", fill = "#FF8C00", size = 4, inherit.aes = F) +
         ggplot2::expand_limits(x = 0, y = 0)
     }
-    # ggiraph::girafe(ggobj = graph_lollipop_desp_)
+    # ggiraph::girafe(ggobj = graph_lollipop_desp)
   }
   return(graph_lollipop_desp)
 }

@@ -8,10 +8,11 @@
 func_check_has_data <- function(df, uf_sel, mun_regsaud_sel, type, ef_proc_res){
   ## Determinando qual é o tipo de eficiência
   if(!ef_proc_res){
-    has_data <- "has_data_proc"
     ## Eficiência de resultados
-  }else{
     has_data <- "has_data_res"
+  }else{
+    ## Eficiência de processos
+    has_data <- "has_data_proc"
   }
   ## Filtrando por município ou região de saúde
   if(type == "mun"){

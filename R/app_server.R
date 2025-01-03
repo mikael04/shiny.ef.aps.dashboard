@@ -405,12 +405,12 @@ app_server <- function(input, output, session) {
     if(debug){
       promise <- "debug"
     }
-    ## Checando para ver se município selecionado possui dados
-    check <- func_check_has_data(df_dados_mun_uf_reg_saud_filter, input$sel_uf_1, input_2, input$type, input$seletor_ef)
-    if(!isTruthy(check)){
-      ## Se o município não possuir dados, exibir aviso e parar execução
-      promise <- NULL
-    }
+    # ## Checando para ver se município selecionado possui dados
+    # check <- func_check_has_data(df_dados_mun_uf_reg_saud_filter, input$sel_uf_1, input_2, input$type, input$seletor_ef)
+    # if(!isTruthy(check)){
+    #   ## Se o município não possuir dados, exibir aviso e parar execução
+    #   promise <- NULL
+    # }
     # browser()
     if(is.null(promise)){
       if(isTruthy(input$cmp_1)){
@@ -764,7 +764,6 @@ app_server <- function(input, output, session) {
 
   observeEvent(input$sel_mun_2, {
     if(input$sel_mun_2 != ""){
-      # browser()
       check <- func_check_has_data(df_dados_mun_uf_reg_saud_filter, input$sel_uf_2, input$sel_mun_2, input$type, input$seletor_ef)
       if(!check){
         mod_modal_server("modal_1",

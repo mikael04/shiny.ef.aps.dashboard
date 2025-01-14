@@ -25,14 +25,14 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
 
   ## Gráfico de eficiencia do Brasil ----
   if(graph_type == 0){
+    # browser()
     ## Selecionando colunas de output e último quadrimestre
     ef_df_br <- ef_df |>
       # dplyr::filter(quad_cod == quad_sel) |>
-      dplyr::select(c(1, 9:21))
+      dplyr::select(1, starts_with("ind"), starts_with("v_ind"))
 
     cols_names <- colnames(ef_df_br)
 
-    # browser()
     graph_lollipop <- ggplot() +
       ggplot2::theme_minimal() +
       theme(
@@ -48,7 +48,7 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
         title = "Saídas"
       )
 
-    ## Quantas colunas precisa pular para comparar com o seu próprio "v_"
+    ## Quantas colunas precisa pular para comparar com o seu próprio "v_", isso também indica o número de colunas de output
     cols_jump <- 7
     cols = ncol(ef_df_br)-cols_jump
 
@@ -57,9 +57,12 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
     ## Nome das colunas
     cols_names <- colnames(ef_df_br)
 
+    ## parâmetro que irá definir qual a primeira coluna de output
+    starts_in <- 2
+
     # browser()
     ## Criando comparações dinamicamente
-    for(i in 2:cols){
+    for(i in starts_in:cols){
       ## Gerando tooltips
       ef_df_br <- func_create_tooltip_ef(
         ef_df_br, graph_type = 0, ef = F, flag_cmp = F, i, "3° Quad/2023",
@@ -84,12 +87,12 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
     # browser()
     ## Selecionando colunas de output
     ef_df_mun_sel <- ef_df |>
-      dplyr::select(c(2, 11:24))
+      dplyr::select(nome_area = 2, starts_with("ind"), starts_with("v_ind"))
 
     if(flag_cmp){
       ## Selecionando colunas de output
       ef_df_mun_cmp <- ef_df_cmp |>
-        dplyr::select(c(2, 11:17))
+        dplyr::select(nome_area = 2, starts_with("ind"))
 
       ## Nome das colunas
       cols_names_cmp <- colnames(ef_df_mun_cmp)
@@ -124,11 +127,14 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
     cols_jump <- 7
     cols = ncol(ef_df_mun_sel)-cols_jump
     if(flag_cmp){
-      cols = cols-cols_jump-1
+      cols = cols-length(cols_names_cmp)
     }
 
+    ## parâmetro que irá definir qual a primeira coluna de output
+    starts_in <- 2
+
     ## Criando camadas de linhas e pontos conforme colunas de outputs
-    for(i in 2:cols){
+    for(i in starts_in:cols){
       # i <- 2
       ## Comparando com v_ para verificar se município já é eficiente
       if(ef_df_mun_sel[[1, i+cols_jump]] == 0){
@@ -143,7 +149,7 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
         ## ef == T se já for eficiente
         ef_df_mun_sel <- func_create_tooltip_ef(
           ef_df_mun_sel, graph_type, ef = T, flag_cmp, i, input_sel_period_name,
-          ef_df_mun_sel$nome_mun, ef_df_mun_sel$cmp_nome_mun,
+          ef_df_mun_sel$nome_area, ef_df_mun_sel$cmp_nome_area,
           in_out_flag, output_names, output_names_clean, cols_names, cols_jump)
 
         ## Montando gráfico com única camada, pois município já é eficiente e não precisa ser comparado
@@ -165,7 +171,7 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
         ## ef == F se já for eficiente
         ef_df_mun_sel <- func_create_tooltip_ef(
           ef_df_mun_sel, graph_type, ef = F, flag_cmp, i, input_sel_period_name,
-          ef_df_mun_sel$nome_mun, ef_df_mun_sel$cmp_nome_mun,
+          ef_df_mun_sel$nome_area, ef_df_mun_sel$cmp_nome_area,
           in_out_flag, output_names, output_names_clean, cols_names, cols_jump)
 
         ## Montando gráfico com três camada, pois município já não é eficiente e precisa ser comparado

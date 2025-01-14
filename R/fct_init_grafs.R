@@ -1,12 +1,13 @@
 #' grafs_iniciais
 #'
 #' @description Uma função que criará os gráficos iniciais dependendo de alguns parâmetros
+#' newcase -> Se é o novo caso onde temos apenas um input no gráfico de eficiência
 #'
 #' @return Os gráficos criados, o mapa, a tabela e o gráfico de eficiência
 #'
 #' @noRd
 func_init_grafs <- function(df_mapa_inicial_ufs_sf, df_tabela_inicial_ufs, ef_br, sel_period,
-                            ef_proc_res){
+                            ef_proc_res, newcase){
   if(F){
     # ef_proc_res = T -> Processos; = F -> Resultados
     ef_proc_res <- T
@@ -54,10 +55,13 @@ func_init_grafs <- function(df_mapa_inicial_ufs_sf, df_tabela_inicial_ufs, ef_br
   ef_br_f <- ef_br |>
     dplyr::filter(quad_cod == sel_period)
 
+  ## A eficiência é calculada apenas uma vez, portanto caso estejamos calculando a eficiência de resultados
+  ## para os gráficos iniciais, nós apenas não calcularemos
+
   initial_list_graphs_inputs_outputs <- func_server_mod_graph_lollipop_inputs_outputs(
     graph_type = 0, input_sel_period_name, ef_br_f,
     flag_cmp = F, ef_df_cmp = F, ef_proc_res)
-  graf_inicial_inputs_outputs <- func_aux_lollipop_patchwork(initial_list_graphs_inputs_outputs)
+  graf_inicial_inputs_outputs <- func_aux_lollipop_patchwork(initial_list_graphs_inputs_outputs, newcase)
 
   return(list(initial_map, initial_gt_tabela, graf_inicial_inputs_outputs))
 

@@ -45,29 +45,13 @@ func_aux_graph_lollipop_input_proc_1 <- function(
     ## Gráfico Despesas por hab. coberto -----
     i <- 2
     ## Quantas colunas terá que pular para ter o valor que falta para eficiência
-    cols_jump <- 2
+    cols_jump <- 1
     ## Gerando tooltips
     ef_df_br <- func_create_tooltip_ef(
       ef_df_br, graph_type = 0, ef = F, flag_cmp = F, i, "3° Quad/2023",
       "Brasil", "",
       in_out_flag, input_names, input_names_clean,
       cols_names, cols_jump)
-
-    if(flag_cmp){
-      ## Selecionando colunas de output
-      ef_df_cmp_ <- ef_df_cmp |>
-        dplyr::select(c(2, 12:18))
-
-      ## Nome das colunas
-      cols_names_cmp <- colnames(ef_df_cmp_)
-
-      ## Renomeando para não ter conflito
-      ef_df_cmp_ <- ef_df_cmp_ |>
-        dplyr::rename_with(~paste0("cmp_", cols_names_cmp), everything())
-
-      ## Adicionando colunas ao df do mun selecionado
-      ef_df_br <- cbind(ef_df_br, ef_df_cmp_)
-    }
 
     ### Gráfico
     graph_lollipop_desp <- graph_lollipop +
@@ -87,12 +71,12 @@ func_aux_graph_lollipop_input_proc_1 <- function(
   if(graph_type == 2){
     # browser()
     ef_df_mun_sel <- ef_df |>
-      dplyr::select(c(2, 8:11))
+      dplyr::select(nome_mun, starts_with("desp"), starts_with("v_desp"))
 
     if(flag_cmp){
       ## Selecionando colunas de output
       ef_df_mun_cmp <- ef_df_cmp |>
-        dplyr::select(c(2, 8:11))
+        dplyr::select(nome_mun, starts_with("desp"), starts_with("v_desp"))
 
       ## Nome das colunas
       cols_names_cmp <- colnames(ef_df_mun_cmp)
@@ -110,10 +94,10 @@ func_aux_graph_lollipop_input_proc_1 <- function(
     ## Gráfico Despesas por hab. coberto -----
     i <- 2
     ## Quantas colunas terá que pular para ter o valor que falta para eficiência
-    cols_jump <- 2
+    cols_jump <- 1
     ## Aqui comparamos se existe um valor que a área geográfica precisa melhorar para o output
     ## Se == 0, significa que já é eficiente
-    if(ef_df_mun_sel[[1, i+2]] == 0){
+    if(ef_df_mun_sel[[1, i+cols_jump]] == 0){
       # ef_df_mun_sel <- ef_df_mun_sel |>
       #   dplyr::mutate(tooltip_col = paste0("Município: ", "<b>", nome_mun, "</b>", "\n",
       #                                      "Valor: ", "<b>", round(!!as.name(cols_names[i]),2), "</b>", "\n",
@@ -133,7 +117,7 @@ func_aux_graph_lollipop_input_proc_1 <- function(
         ggplot2::expand_limits(x = 0, y = 0)
     }
     ## Se != 0, significa que não é eficiente e precisa melhorar
-    if(ef_df_mun_sel[[1, i+2]] != 0){
+    if(ef_df_mun_sel[[1, i+cols_jump]] != 0){
       # browser()
       # ef_df_mun_sel <- ef_df_mun_sel |>
       #   dplyr::mutate(tooltip_col = paste0("Município: ", "<b>", nome_mun, "</b>", "\n",
@@ -168,7 +152,7 @@ func_aux_graph_lollipop_input_proc_1 <- function(
                                         shape = 21, colour = "black", fill = "#FF8C00", size = 4, inherit.aes = F) +
         ggplot2::expand_limits(x = 0, y = 0)
     }
-    # ggiraph::girafe(ggobj = graph_lollipop_desp_)
+    # ggiraph::girafe(ggobj = graph_lollipop_desp)
   }
   return(graph_lollipop_desp)
 }

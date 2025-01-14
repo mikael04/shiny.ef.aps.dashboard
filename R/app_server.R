@@ -23,6 +23,8 @@ app_server <- function(input, output, session) {
   title_map_tab_loc <- reactiveVal("nas UFs")
   title_ef_loc <- reactiveVal(paste0(
     "no <span style=color:#006400><b>", "Brasil", "</b></span>"))
+  subtitle_metricas_ef <- reactiveVal("Processos")
+  subtitle_metricas_period <- reactiveVal("no período")
   flag_cmp <- F
   ef_df_cmp <- NULL
   ### Filtro de equidade
@@ -31,6 +33,8 @@ app_server <- function(input, output, session) {
   flag_change_type <- reactiveVal(F)
   ### Se recém chamou o seletor de município ou região de saúde, ele chama novamente porque o próprio observe altera o input
   flag_mun_regsaude_first <- reactiveVal(F)
+  ### Newcase, atualizando a forma de calcular o gráfico de eficiência para novos dados
+  newcase <- T
   ## 0.1.1 Debug ----
   debug <- T
   read_data_rds <- F
@@ -173,12 +177,12 @@ app_server <- function(input, output, session) {
   ## Reativos porque podemos mudar a eficiência e consequentemente os gráficos e títulos
   # title_ef_def <- title_ef_def("Processos")
   ## Mapa do brasil
-  mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = T)
-  ## Tabela de eficiência das UFs
-  mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = T)
-  ### Inputs e outputs
-  mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                           initial_state = T, ef_proc_res = T, list_graphs_inputs_outputs = NULL)
+  # mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = T)
+  # ## Tabela de eficiência das UFs
+  # mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = T)
+  # ### Inputs e outputs
+  # mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+  #                                          initial_state = T, ef_proc_res = T, list_graphs_inputs_outputs = NULL)
   output$box_graf_ef <- renderUI({
     div(
       id = "graf-ef",
@@ -206,21 +210,21 @@ app_server <- function(input, output, session) {
   })
   ## Versão inicial da aplicação dos títulos de mapa e gráfico de eficiência
   ## Atualizando nome do período
-  output$title_map <- renderUI({
-    div(class="titles-graph title-map",
-        span(HTML(paste0("Eficiência de <b>", "Processos", "</b> ", title_map_tab_loc()))),
-        br(),
-        span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
-    )})
-  ### Título do gráfico de eficiência
-  output$title_ef <- renderUI({
-    div(class="titles-graph title-ef",
-        span(HTML(paste0("Métricas de Eficiência "))),
-        span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
-        br(),
-        span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
-    )
-  })
+  # output$title_map <- renderUI({
+  #   div(class="titles-graph title-map",
+  #       span(HTML(paste0("Eficiência de <b>", "Processos", "</b> ", title_map_tab_loc()))),
+  #       br(),
+  #       span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+  #   )})
+  # ### Título do gráfico de eficiência
+  # output$title_ef <- renderUI({
+  #   div(class="titles-graph title-ef",
+  #       span(HTML(paste0("Métricas de Eficiência "))),
+  #       span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
+  #       br(),
+  #       span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
+  #   )
+  # })
   ## 2.2 Títulos reativos, adição/remoção do gráfico de eficiência  ----
   observeEvent(input$applyFilters,{
     ## Título do mapa, atualizando nome do período
@@ -237,7 +241,7 @@ app_server <- function(input, output, session) {
           span(HTML(paste0("Métricas de Eficiência "))),
           span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
           br(),
-          span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+          span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
       )
     })
     ## Criando gráfico de eficiência ou apenas box vazio
@@ -401,12 +405,12 @@ app_server <- function(input, output, session) {
     if(debug){
       promise <- "debug"
     }
-    ## Checando para ver se município selecionado possui dados
-    check <- func_check_has_data(df_dados_mun_uf_reg_saud_filter, input$sel_uf_1, input_2, input$type, input$seletor_ef)
-    if(!isTruthy(check)){
-      ## Se o município não possuir dados, exibir aviso e parar execução
-      promise <- NULL
-    }
+    # ## Checando para ver se município selecionado possui dados
+    # check <- func_check_has_data(df_dados_mun_uf_reg_saud_filter, input$sel_uf_1, input_2, input$type, input$seletor_ef)
+    # if(!isTruthy(check)){
+    #   ## Se o município não possuir dados, exibir aviso e parar execução
+    #   promise <- NULL
+    # }
     # browser()
     if(is.null(promise)){
       if(isTruthy(input$cmp_1)){
@@ -458,8 +462,7 @@ app_server <- function(input, output, session) {
         input_sel_uf_2 <- input$sel_uf_2
         input_sel_reg_saude_2 <- input$sel_reg_saude_2
         input_sel_mun_2 <- input$sel_mun_2
-        # browser()
-        input_sel_period_name <- ifelse(input$seletor_ef, input_sel_period, names(choices_quad[as.integer(input_sel_period)]))
+        input_sel_period_name <- ifelse(!input$seletor_ef, input_sel_period, names(choices_quad[as.integer(input_sel_period)]))
         # input_sel_period_name <- names(choices_quad[as.integer(input_sel_period)])
         if(FALSE){
           ## Inputs passados para promises
@@ -484,6 +487,17 @@ app_server <- function(input, output, session) {
           }
         }
         list_dfs <- list(NULL, NULL)
+        ## Alterando títulos
+        if(!input$seletor_ef){
+          title_ef_def <- title_ef_def("Resultados")
+          subtitle_metricas_period = subtitle_metricas_period("no ano")
+          title_period = title_period(sel_period_name_ano)
+        }else{
+          title_ef_def <- title_ef_def("Processos")
+          subtitle_metricas_period = subtitle_metricas_period("no período")
+          title_period = title_period(sel_period_name_quad)
+        }
+        ## Gerando novos gráficos
         result_func <- func_applyFilters(
           tipo_quad, graph_type, title_ef_def(),
           list_dfs, con, data_from_bd,
@@ -525,7 +539,7 @@ app_server <- function(input, output, session) {
       ### Inputs e outputs
       mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
                                                initial_state = F, ef_proc_res,
-                                               list_graphs_inputs_outputs)
+                                               list_graphs_inputs_outputs, newcase)
       shinyalert::closeAlert()
     }
   })
@@ -594,21 +608,21 @@ app_server <- function(input, output, session) {
         #   )
         # })
 
-        ## Apresentando modal explicando comparação entre municípios
-        title <- dplyr::case_when(
-          input$type == "uf" ~ "Comparação entre UFs",
-          input$type == "mun" ~ "Comparação entre municípios",
-          input$type == "reg_saude" ~ "Comparação entre região de saúde"
-        )
-        text <- dplyr::case_when(
-          input$type == "uf" ~ "Lembrando que a comparação será feita com a média dos municípios das UFs comparadas.",
-          input$type == "mun" ~ "O município por padrão poderá ser comparado com municípios de mesmo Índice de equidade e dimensionamento (IED),
-        portanto, caso queira comparar com outros municípios, desative o filtro de equidade. Porém, recomendamos que,
-        para efeitos de comparações mais justas se façam comparações apenas com municípios de mesmo IED.",
-          input$type == "reg_saude" ~ "Lembrando que a comparação será feita com a média das região de saúde comparadas."
-        )
-        mod_modal_faixa_cmp_server("modal_faixa_cmp_1", title,
-                                   text)
+        # ## Apresentando modal explicando comparação entre municípios
+        # title <- dplyr::case_when(
+        #   input$type == "uf" ~ "Comparação entre UFs",
+        #   input$type == "mun" ~ "Comparação entre municípios",
+        #   input$type == "reg_saude" ~ "Comparação entre região de saúde"
+        # )
+        # text <- dplyr::case_when(
+        #   input$type == "uf" ~ "Lembrando que a comparação será feita com a média dos municípios das UFs comparadas.",
+        #   input$type == "mun" ~ "O município por padrão poderá ser comparado com municípios de mesmo Índice de equidade e dimensionamento (IED),
+        # portanto, caso queira comparar com outros municípios, desative o filtro de equidade. Porém, recomendamos que,
+        # para efeitos de comparações mais justas se façam comparações apenas com municípios de mesmo IED.",
+        #   input$type == "reg_saude" ~ "Lembrando que a comparação será feita com a média das região de saúde comparadas."
+        # )
+        # mod_modal_faixa_cmp_server("modal_faixa_cmp_1", title,
+        #                            text)
         ## Senão houver dados para o município selecionado, apresentar o modal com aviso
       }else{
         mod_modal_server("modal_1",
@@ -633,11 +647,12 @@ app_server <- function(input, output, session) {
   observeEvent(input$sel_uf_2, {
     # browser()
     ## Filtrando a faixa (ied)
-    ied_mun_sel <- func_get_mun_ied(df_mun_ied, input$sel_uf_1, input$sel_mun_1)
+    ### Não será mais filtrado por ied, calculo de eficiencia já faz
+    # ied_mun_sel <- func_get_mun_ied(df_mun_ied, input$sel_uf_1, input$sel_mun_1)
     ## Município
     if(input$type == "mun"){
       ## filter_uf_ied == 10 -> Não filtrar por IED, filter_uf_ied == 11, filtrar por ied
-      filter_ied_sel <- ifelse(filt_eq(), 11, 10)
+      filter_ied_sel <- ifelse(F, 11, 10)
       func_att_selector_type_cmp_uf_faixa(session, output, "sel_mun_2", input$sel_uf_2, df_mun_ied,
                                           mun_regsaude = 1, ied_mun_sel, filter_ied = filter_ied_sel,
                                           debug)
@@ -650,32 +665,32 @@ app_server <- function(input, output, session) {
   })
   ### 4.3.1 Equidade -----
   ### Reatividade botão filtro de equidade
-  observeEvent(input$filtro_eq, {
-    # browser()
-    filt_eq <- reactiveVal(input$filtro_eq)
-    ## Se botão de comparação estiver ativo
-    # browser()
-    if(isTruthy(input$cmp_1)){
-      ## Se for comparação de municípios
-      if(input$type == "mun"){
-        ## Se o filtro estiver ativado, passar 11 (filtrar por ied), senão passar 10 (não filtrar)
-        filter_ied_sel <- ifelse(filt_eq(), 11, 10)
-        # browser()
-        ## se o filtro estiver ativado, passar o ied do município selecionado, senão passar 0
-        ied_mun_sel_f <- ifelse(filter_ied_sel == 11, func_get_mun_ied(df_mun_ied, input$sel_uf_1, input$sel_mun_1), 0)
-        func_att_selector_type_cmp_uf_faixa(session, output, "sel_mun_2", input$sel_uf_2, df_mun_ied,
-                                            mun_regsaude = 1, ied_mun_sel = ied_mun_sel_f, filter_ied = filter_ied_sel,
-                                            debug)
-      }
-    }
-    if(!isTruthy(filt_eq())){
-      mod_modal_server("modal_1",
-                       title = "Filtro de equidade",
-                       first_test = "O filtro de equidade foi desativado. ",
-                       mid_text = "Agora você poderá comparar o município selecionado com qualquer outro município. Caso deseje ativar o filtro novamente, clique no botão de comparação. ",
-                       end_text = "Por favor, esteja ciente de que esta comparação não leva em conta a metodologia utilizada no trabalho para <b>a comparação</b> de municípios, portanto <b>pode não ser justa.</b>")
-    }
-  })
+  # observeEvent(input$filtro_eq, {
+  #   # browser()
+  #   filt_eq <- reactiveVal(input$filtro_eq)
+  #   ## Se botão de comparação estiver ativo
+  #   # browser()
+  #   if(isTruthy(input$cmp_1)){
+  #     ## Se for comparação de municípios
+  #     if(input$type == "mun"){
+  #       ## Se o filtro estiver ativado, passar 11 (filtrar por ied), senão passar 10 (não filtrar)
+  #       filter_ied_sel <- ifelse(filt_eq(), 11, 10)
+  #       # browser()
+  #       ## se o filtro estiver ativado, passar o ied do município selecionado, senão passar 0
+  #       ied_mun_sel_f <- ifelse(filter_ied_sel == 11, func_get_mun_ied(df_mun_ied, input$sel_uf_1, input$sel_mun_1), 0)
+  #       func_att_selector_type_cmp_uf_faixa(session, output, "sel_mun_2", input$sel_uf_2, df_mun_ied,
+  #                                           mun_regsaude = 1, ied_mun_sel = ied_mun_sel_f, filter_ied = filter_ied_sel,
+  #                                           debug)
+  #     }
+  #   }
+  #   if(!isTruthy(filt_eq())){
+  #     mod_modal_server("modal_1",
+  #                      title = "Filtro de equidade",
+  #                      first_test = "O filtro de equidade foi desativado. ",
+  #                      mid_text = "Agora você poderá comparar o município selecionado com qualquer outro município. Caso deseje ativar o filtro novamente, clique no botão de comparação. ",
+  #                      end_text = "Por favor, esteja ciente de que esta comparação não leva em conta a metodologia utilizada no trabalho para <b>a comparação</b> de municípios, portanto <b>pode não ser justa.</b>")
+  #   }
+  # })
 
   ## Reatividade da caixa de seleção de comparação,
   ## Agora como ao mudar o município selecionado, também precisamos mudar os municípios de comparação
@@ -750,7 +765,6 @@ app_server <- function(input, output, session) {
 
   observeEvent(input$sel_mun_2, {
     if(input$sel_mun_2 != ""){
-      # browser()
       check <- func_check_has_data(df_dados_mun_uf_reg_saud_filter, input$sel_uf_2, input$sel_mun_2, input$type, input$seletor_ef)
       if(!check){
         mod_modal_server("modal_1",
@@ -866,53 +880,63 @@ app_server <- function(input, output, session) {
   ## 5.2 Gráficos iniciais ----
   ### Título da caixa do mapa
   observeEvent(input$seletor_ef, {
-    # browser()
-    ## Se for a versão inicial da aplicação, apenas alterar os gráficos
-    if(initial_state() && input$type == "no_sel"){
-      ## Senão for a versão inicial da aplicação, apresentar popup para troca
-    }else{
-      ## Alterando o título dos gráficos de eficiência
-      if(!input$seletor_ef){
-        title_ef_def <- title_ef_def("Processos")
-
-      }else{
-        title_ef_def <- title_ef_def("Resultados")
-      }
-      mod_modal_server("modal_2", title = "Troca de eficiência",
-                       first_test = "Você deseja trocar a eficiência?",
-                       mid_text = " Ao trocar a eficiência, <b>os gráficos apresentados serão alterados.</b>",
-                       end_text = " Se sim, </b>clique em 'Aplicar filtros'</b> novamente para ver os novos gráficos.")
-    }
+    ## Alterando caixa de seleção de período
     if(!input$seletor_ef){
-      updateSelectizeInput(session,
-                           "sel_period",
-                           label = "Selecione o quadrimestre:",
-                           choices = choices_quad, selected = choices_quad[nrow(df_quad)])
-      title_period = title_period(sel_period_name_quad)
-      ## Alterando gráficos iniciais
-      ## Mapa do brasil
-      mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = F)
-      ## Tabela de eficiência das UFs
-      mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = F)
-      ### Inputs e outputs
-      mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                               initial_state = T, ef_proc_res = F, list_graphs_inputs_outputs = NULL)
-
-    }else{
+      # title_ef_def <- title_ef_def("Resultados")
+      # subtitle_metricas_period = subtitle_metricas_period("no ano")
+      # title_period = title_period(sel_period_name_ano)
       updateSelectizeInput(session,
                            "sel_period",
                            label = "Selecione ano:",
                            choices = c("2022", "2023"), selected = "2023")
-      title_period = title_period(sel_period_name_ano)
+    }else{
+      # title_ef_def <- title_ef_def("Processos")
+      # subtitle_metricas_period = subtitle_metricas_period("no período")
+      # title_period = title_period(sel_period_name_quad)
+      updateSelectizeInput(session,
+                           "sel_period",
+                           label = "Selecione o quadrimestre:",
+                           choices = choices_quad, selected = choices_quad[nrow(df_quad)])
+    }
+    ## Se for a versão inicial da aplicação, apenas alterar os gráficos
+    if(initial_state() && input$type == "no_sel"){
+      if(input$seletor_ef){
+        ## Alterando títulos
+        title_ef_def <- title_ef_def("Processos")
+        subtitle_metricas_period = subtitle_metricas_period("no período")
+        title_period = title_period(sel_period_name_quad)
+        ## Alterando gráficos iniciais
+        ## Mapa do brasil
+        mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = input$seletor_ef)
+        ## Tabela de eficiência das UFs
+        mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = input$seletor_ef)
+        ### Inputs e outputs
+        mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                                 initial_state = T, ef_proc_res = input$seletor_ef,
+                                                 list_graphs_inputs_outputs = NULL, newcase)
 
-      ## Alterando gráficos iniciais
-      ## Mapa do brasil
-      mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = T)
-      ## Tabela de eficiência das UFs
-      mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = T)
-      ### Inputs e outputs
-      mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                               initial_state = T, ef_proc_res = T, list_graphs_inputs_outputs = NULL)
+      }else{
+        ## Alterando títulos
+        title_ef_def <- title_ef_def("Resultados")
+        subtitle_metricas_period = subtitle_metricas_period("no ano")
+        title_period = title_period(sel_period_name_ano)
+
+        ## Alterando gráficos iniciais
+        ## Mapa do brasil
+        mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = input$seletor_ef)
+        ## Tabela de eficiência das UFs
+        mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = input$seletor_ef)
+        ### Inputs e outputs
+        mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                                 initial_state = T, ef_proc_res = input$seletor_ef,
+                                                 list_graphs_inputs_outputs = NULL, newcase)
+      }
+    ## Senão for a versão inicial da aplicação, apresentar popup para troca
+    }else{
+      mod_modal_server("modal_2", title = "Troca de eficiência",
+                       first_test = "Você deseja trocar a eficiência?",
+                       mid_text = " Ao trocar a eficiência, <b>os gráficos apresentados serão alterados.</b>",
+                       end_text = " Se sim, </b>clique em 'Aplicar filtros'</b> novamente para ver os novos gráficos.")
     }
   })
   ## Versão inicial da aplicação dos títulos de mapa e gráfico de eficiência
@@ -921,15 +945,16 @@ app_server <- function(input, output, session) {
     div(class="titles-graph title-map",
         span(HTML(paste0("Eficiência de <b>", title_ef_def(), "</b> ", title_map_tab_loc()))),
         br(),
-        span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
-    )})
+        span(class = "subtitle", ifelse(input$seletor_ef, "No período ", "No ano "), title_period())
+    )
+  })
   ### Título do gráfico de eficiência
   output$title_ef <- renderUI({
     div(class="titles-graph title-ef",
         span(HTML(paste0("Métricas de Eficiência "))),
         span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
         br(),
-        span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+        span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
     )
   })
   ## Versões reativas
@@ -948,7 +973,7 @@ app_server <- function(input, output, session) {
           span(HTML(paste0("Métricas de Eficiência "))),
           span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
           br(),
-          span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+          span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
       )
     })
     if(initial_state()){

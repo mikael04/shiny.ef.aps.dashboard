@@ -59,7 +59,6 @@ func_server_mod_tabela_ef <- function(
       df_tabela <- func_order_by_ef_sel(df_tabela, ef_proc_res)
     }
   }
-
   ## Sem miniplot ----
   if(!with_miniplot){
     if(flag_brasil){
@@ -70,7 +69,7 @@ func_server_mod_tabela_ef <- function(
     if(flag_mun){
       df_tabela_quad_sel <- df_tabela |>
         dplyr::select(tidyr::ends_with(paste0(type_ef, "_", sel_period))) |>
-        dplyr::rename(ef_BCC = 1)
+        dplyr::select(ef_BCC = 1)
 
       ## Unindo novamente com a base, para termos o valor atual separado
       df_tabela <- dplyr::bind_cols(df_tabela, df_tabela_quad_sel) |>
@@ -155,11 +154,16 @@ func_server_mod_tabela_ef <- function(
   }
   ## Sem miniplot ----
   if(!with_miniplot){
+    # browser()
     gt_tabela <- df_tabela |>
       dplyr::ungroup() |>
       gt::gt(locale = "pt") |>
       gt::cols_label(
         ef_BCC = gt::md(paste0("Eficiência no ", title_period))
+      ) |>
+      gt::fmt_number(
+        columns = ef_BCC,
+        decimals = 2
       ) |>
       gt::tab_header(gt::md(paste0("Eficiência dos ", "**", tab_title_ef, "**", " ", tab_title_extra))) |>
       gt::opt_interactive(use_compact_mode = TRUE,

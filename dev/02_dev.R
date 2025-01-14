@@ -52,6 +52,7 @@ golem::add_module(name = "modal_faixa_cmp", with_test = F) # Name of the module
 ## Creates fct_* and utils_*
 ## Transformação de dados
 golem::add_fct("transform_data_rda", with_test = F)
+golem::add_fct("transf_data_res", with_test = F)
 ### Gráficos iniciais
 golem::add_fct("init_dfs_iniciais", with_test = F)
 golem::add_fct("init_grafs", with_test = F)
@@ -98,6 +99,9 @@ golem::add_utils("db", with_test = F)
 golem::add_utils("environment", with_test = F)
 ### Atualização dos dados (usando a transform_data_rda que chama a update_data_PostgreSQL)
 golem::add_fct("update_data_PostgreSQL", with_test = F)
+
+## Test
+golem::add_fct("test_data", with_test = F)
 
 
 ## External resources

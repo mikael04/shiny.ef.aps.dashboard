@@ -28,22 +28,10 @@ func_ui_panel <- function(session, id){
               ),
               div(
                 class = "seletor_ef",
-                tags$span(id="left", class="pointer", "PROCESSOS"),
-                shinyWidgets::materialSwitch(inputId = "seletor_ef", label = "", inline = TRUE),
-                tags$span(id="right", class="pointer", "RESULTADOS")
-              )
-            ),
-            ## Seletor do filtro de equidade
-            div(
-              div(
-                class="h4 tit-equidade",
-                "Equidade"
-              ),
-              div(
-                class = "seletor_ef",
-                tags$span(id="left", class="pointer", "LIGADO"),
-                shinyWidgets::materialSwitch(inputId = "seletor_eq", label = "", inline = TRUE),
-                tags$span(id="right", class="pointer", "DESLIGADO")
+                tags$span(id="left", class="pointer", "RESULTADOS"),
+                shinyWidgets::materialSwitch(inputId = "seletor_ef", label = "",
+                                             inline = TRUE, value = TRUE),
+                tags$span(id="right", class="pointer", "PROCESSOS")
               )
             ),
             selectizeInput(

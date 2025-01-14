@@ -22,8 +22,10 @@
   padding-right: 1.5vw;
 }
 /* Cor da seleção inicial de eficiência */
-#left{
+#right{
   color: orange;
+  font-weight: bold;
+  cursor: default !important;
 }
 /* Alterando a cor do seletor */
 .material-switch>label.switch:after {
@@ -31,6 +33,7 @@
 }
 /* Formato do cursor*/
 #left{
+  color: white;
   cursor: default !important;
 }
 /* Títulos dinâmicos dos gráficos */

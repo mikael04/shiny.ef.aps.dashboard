@@ -12,6 +12,7 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
                                    cols_names, cols_jump){
   if(F){
     ef_df_tooltip <- ef_df_mun_sel
+    # ef_df_tooltip <- ef_df_br
     graph_type <- 2
     ef <- F
     i <- 2
@@ -25,33 +26,36 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
     cols_jump <- cols_jump
     nome_area_cmp <- ef_df_tooltip$cmp_nome_mun
   }
+  first_col <- i-1
+  # browser()
   ## ef == T se já for eficiente
-  if(ef == T){
+  if(ef){
     ef_return <- ef_df_tooltip |>
       dplyr::mutate(
         tooltip_col = paste0(
           "Região: ", "<b>", nome_area, "</b>", "\n",
           "Período: ", "<b>", input_sel_period_name, "</b>", "\n",
           "Índice de ", ifelse(in_out_flag == T, "entrada: ",  "saída: "),
-          "<b>", in_out_names_clean[i-1], "</b>", ".\n",
+          "<b>", in_out_names_clean[first_col], "</b>", ".\n",
           "Valor atual", ifelse(graph_type == 2, ": ", " médio: "),
           "<b>", round(!!as.name(cols_names[i]), 2), "</b>", "\n",
           "A região <b>já é eficiente nesta área.</br>"),
-        eixo_x = in_out_names[i-1])
+        eixo_x = in_out_names[first_col])
   }
   ## ef == F se não for eficiente
-  if(ef == F){
+  if(!ef){
+    ## in_out_names i-3, temos 3 colunas iniciais, região geográfica, ef_bcc, quad_cod
     ef_return <- ef_df_tooltip |>
       dplyr::mutate(
         tooltip_col = paste0(
           "Região: ", "<b>", nome_area, "</b>", "\n",
           "Período: ", "<b>", input_sel_period_name, "</b>", "\n",
           "Índice de ", ifelse(in_out_flag == T, "entrada: ",  "saída: "),
-          "<b>", in_out_names_clean[i-1], "</b>", ".\n",
+          "<b>", in_out_names_clean[first_col], "</b>", ".\n",
           "Valor para alcançar eficiência: ", "<b>", round((!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])), 2), "</b>", "\n",
           "Valor atual", ifelse(graph_type == 2, ": ", " médio: "),
           "<b>", round(!!as.name(cols_names[i]), 2), "</b>", "\n"),
-        eixo_x = in_out_names[i-1])
+        eixo_x = in_out_names[first_col])
   }
   if(flag_cmp){
     ef_return <- ef_return |>

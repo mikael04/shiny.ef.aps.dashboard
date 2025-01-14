@@ -23,13 +23,15 @@ func_server_mod_graph_lollipop_inputs_outputs <- function(
 
   ## Testa true, roda ef de processos
   if(ef_proc_res){
+    # browser()
     ## Gerencia os tipos de gráficos de inputs
     graph_input_1 <- func_aux_graph_lollipop_input_proc_1(graph_type, input_sel_period_name, ef_df,
                                                           flag_cmp,
                                                           ef_df_cmp, ef_proc_res)
-    graph_input_2 <- func_aux_graph_lollipop_input_proc_2(graph_type, input_sel_period_name, ef_df,
-                                                          flag_cmp,
-                                                          ef_df_cmp, ef_proc_res)
+    ## Não temos mais segundo input
+    # graph_input_2 <- func_aux_graph_lollipop_input_proc_2(graph_type, input_sel_period_name, ef_df,
+    #                                                       flag_cmp,
+    #                                                       ef_df_cmp, ef_proc_res)
 
     ## Gerencia os tipos de gráficos de outputs
     graph_lollipop_outputs <- func_aux_graph_lollipop_outputs_proc(graph_type, input_sel_period_name, ef_df,
@@ -42,9 +44,9 @@ func_server_mod_graph_lollipop_inputs_outputs <- function(
     graph_input_1 <- func_aux_graph_lollipop_input_res_1(graph_type, input_sel_period_name, ef_df,
                                                          flag_cmp,
                                                          ef_df_cmp, ef_proc_res)
-    graph_input_2 <- func_aux_graph_lollipop_input_res_2(graph_type, input_sel_period_name, ef_df,
-                                                         flag_cmp,
-                                                         ef_df_cmp, ef_proc_res)
+    # graph_input_2 <- func_aux_graph_lollipop_input_res_2(graph_type, input_sel_period_name, ef_df,
+    #                                                      flag_cmp,
+    #                                                      ef_df_cmp, ef_proc_res)
 
     ## Gerencia os tipos de gráficos de outputs
     graph_lollipop_outputs <- func_aux_graph_lollipop_outputs_res(graph_type, input_sel_period_name, ef_df,
@@ -67,5 +69,5 @@ func_server_mod_graph_lollipop_inputs_outputs <- function(
   # graph_inputs_outputs
   # browser()
   ## Retornando uma lista com os gráficos para montagem no mod_graph_lollipop
-  return(list(graph_input_1, graph_input_2, graph_arrow, graph_lollipop_outputs))
+  return(list(graph_input_1, graph_arrow, graph_lollipop_outputs))
 }

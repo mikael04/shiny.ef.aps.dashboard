@@ -42,9 +42,9 @@ func_transform_data_to_download <- function(ef_muns_proc, ef_muns_res){
       ## Dados sociodemográficos
       pop_2022, ivs, faixa_porte_2022, ied,
       ## Inputs
-      desp_final, eq_por_hab_cad,
+      desp_final,
       ## Quanto falta nos inputs
-      v_desp_final, v_eq_por_hab_cad,
+      v_desp_final,
       ## Outputs
       tx_mort, tx_inter,
       ### Quanto falta nos outputs

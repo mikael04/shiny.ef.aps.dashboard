@@ -196,6 +196,7 @@ func_applyFilters <- function(
         flag_cmp, ef_cmp, ef_proc_res)
       # graph_inputs_outputs <- NULL
       # }
+      ggiraph::girafe(ggobj = list_graphs_inputs_outputs[[3]])
     }
   }
 

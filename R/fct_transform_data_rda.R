@@ -22,19 +22,33 @@ source("R/fct_server_mod_mapa.R")
 source("R/fct_server_mod_tabela_ef.R")
 source("R/fct_transform_data_to_download.R")
 source("R/fct_update_data_PostgreSQL.R")
+source("R/fct_test_data.R")
 library(ggplot2)
 library(patchwork)
 ## Chamando a função para recriar dados
 # func_transform_data_rda()
 
 func_transform_data_rda <- function(){
+  verbose <- F
+  if(verbose) print(paste0("Iniciando processo de transformação"))
   overwrite_data <- T
   use_RDS <- T
   use_RDA <- T
   update_db <- T
+
   ## Ao invés de usar 6, usaremos o último disponível, portanto não será setado manualmente
   # sel_period <- 6L
   if(overwrite_data){
+    ## Checando se dados recebidos são os mesmos já utilizados (ou se precisa uma nova transformação)
+    result_test_data <- func_test_data()
+    if(result_test_data > 0){
+      stop("Parando execução, dados de eficiência não são os mesmos utilizados anteriormente,
+           ajustes precisam ser feitos.")
+    }else{
+      if(verbose)
+      cat("Dados de eficiência são os mesmos utilizados anteriormente, continuando com a transformação e atualização dos dados.")
+    }
+
     # Lendo dados ----
     ## Geométricos ----
     ### Municípios
@@ -79,6 +93,7 @@ func_transform_data_rda <- function(){
       dplyr::left_join(df_mun_ied, by = c("cod_ibge", "nome_mun", "nome_uf")) |>
       dplyr::mutate(has_data_proc = ifelse(is.na(ied), F, T))
 
+
     df_mun_ied_res <- data.table::fread(here::here("data-raw/eficiencia_resultados_corrigida_2022_2023.csv")) |>
       dplyr::select(cod_ibge = ibge, nome_mun,
                     ied = indice_de_equidade_e_dimensionamento_ied) |>
@@ -106,7 +121,7 @@ func_transform_data_rda <- function(){
                     ano = as.integer(stringr::str_sub(ano_quad, 1, 4)),
                     quad = as.integer(stringr::str_sub(ano_quad, -1, -1)),
                     quad_cod = (ano-2022)*3+quad) |>
-      dplyr::select(cod_ibge, nome_mun = nome_mun.x, ano, ano_quad, quad_cod, ef_BCC, ef_CCR,
+      dplyr::select(cod_ibge, nome_mun = nome_mun.x, ano, ano_quad, quad_cod, ef_BCC,
                     ## inputs
                     desp_final = desp_por_eq_2, #desp_por_hab_cob
                     ## Quanto falta nos inputs
@@ -139,11 +154,11 @@ func_transform_data_rda <- function(){
       dplyr::mutate(ano_quad = paste0(ano, "_", quad),
                     quad_cod = (ano-2022)*3+quad+1) |>
       dplyr::select(
-        cod_ibge, nome_mun = nome_mun.x, ano, ano_quad, quad_cod, ef_BCC, ef_CCR,
+        cod_ibge, nome_mun = nome_mun.x, ano, ano_quad, quad_cod, ef_BCC,
         ## inputs
-        desp_final = desp_por_hab, eq_por_hab_cad = eq_por_hab,
+        desp_final = desp_por_hab,
         ## Quanto falta nos inputs
-        v_desp_final = v_desp_por_hab, v_eq_por_hab_cad = v_eq_por_hab,
+        v_desp_final = v_desp_por_hab,
         ## outputs
         tx_mort, tx_inter,
         ## Quanto falta nos outputs
@@ -224,9 +239,9 @@ func_transform_data_rda <- function(){
     ef_ufs_res <- ef_muns_res |>
       dplyr::select(CO_UF, nome_uf, ef_BCC, quad_cod,
                     ## inputs
-                    desp_final, eq_por_hab_cad,
+                    desp_final,
                     ## Quanto falta nos inputs
-                    v_desp_final, v_eq_por_hab_cad,
+                    v_desp_final,
                     ## outputs
                     tx_mort, tx_inter,
                     ## Quanto falta nos outputs
@@ -346,7 +361,7 @@ func_transform_data_rda <- function(){
       saveRDS(df_muns_res_download, file = "data/database_data/df_muns_res_download.rds")
       ## Após salvar dados utilizados no formato .rds, atualizar o banco de dados
       if(update_db){
-        func_update_data_PostreSQL()
+        func_update_data_PostreSQL(verbose)
       }
     }
 
@@ -368,6 +383,8 @@ func_transform_data_rda <- function(){
       # usethis::use_data(ef_br_proc, overwrite = TRUE)
       # usethis::use_data(ef_br_proc_quad, overwrite = TRUE)
       ## SFs utilizados ----
+      if(!verbose)
+        withr::local_options(list(usethis.quiet = T))
       usethis::use_data(mun_sf, overwrite = TRUE)
       usethis::use_data(uf_sf, overwrite = TRUE)
       usethis::use_data(reg_saude_sf, overwrite = TRUE)
@@ -380,7 +397,35 @@ func_transform_data_rda <- function(){
       usethis::use_data(initial_graf_inputs_outputs_r, overwrite = TRUE)
     }
   }
+
+  if(verbose){
+    if(overwrite_data){
+      print("Dados sobrescritos")
+    }
+    if(use_RDS){
+      print("Dados em formato RDS salvos")
+      print("dados_longitudinais, dados_munic_uf_regiao_regsaude, df_mun_cod_ibge,
+          df_mun_cod_ibge_regsaude, df_dados_mun_uf_reg_saud_filter, df_mun_ied,
+          df_cap_uf_ibge, ef_muns_proc, ef_muns_quad_proc, ef_muns_res, ef_muns_ano_res,
+          ef_ufs_proc, ef_ufs_proc_quad, ef_br_proc, ef_br_proc_quad, ef_ufs_res,
+          ef_ufs_res_quad, ef_br_res, ef_br_quad, df_muns_proc_download,
+          df_muns_res_download")
+
+      if(update_db){
+        print("Banco de dados atualizado (verificar banco de dados destino)")
+      }
+    }
+    if(use_RDA){
+      print("Dados em formato RDA salvos")
+      print("mun_sf, uf_sf, reg_saude_sf, initial_map_p, initial_gt_tabela_p,
+          initial_graf_inputs_outputs_p, initial_map_r, initial_gt_tabela_r,
+          initial_graf_inputs_outputs_r")
+    }
+    print(paste0("Finalizando processo de transformação"))
+  }
 }
+
+func_transform_data_rda()
 
 
 # ## Manipulando dados apenas para resolver município duplicado

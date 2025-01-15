@@ -5,7 +5,7 @@
 #' @return Retorna o tipo de erro associado (0 sendo não-erro, demais valores erros)
 #'
 #' @noRd
-test_duplicate_data <- function(overwrite, verbose) {
+func_test_duplicate_data <- function(overwrite, verbose) {
   if(F){
     overwrite <- T
     verbose <- T
@@ -19,6 +19,8 @@ test_duplicate_data <- function(overwrite, verbose) {
 
     ### Verificando dados duplicados (município aparece mais vezes do que deveria)
     #### Processos
+    if(verbose)
+      cat("Verificando duplicatas na base de eficiência de PROCESSOS", "\n")
     ef_muns_proc_dup <- ef_muns_proc |>
       dplyr::group_by(ibge, quad) |>
       dplyr::mutate(n = dplyr::n()) |>
@@ -26,6 +28,10 @@ test_duplicate_data <- function(overwrite, verbose) {
       dplyr::select(ibge, quad, ef_BCC, n)
 
     if(nrow(ef_muns_proc_dup) > 0){
+      if(verbose){
+        cat("Municípios duplicados em ef_muns_proc: ", "\n")
+        cat(capture.output(print(ef_muns_proc_dup)), sep = "\n")
+      }
       if(overwrite){
         ef_muns_proc <- ef_muns_proc |>
           dplyr::group_by(ibge, quad) |>
@@ -38,6 +44,9 @@ test_duplicate_data <- function(overwrite, verbose) {
         stop("Encontrado um ou mais municípios duplicados na base de eficiência de PROCESSOS, corrigir duplicatas ou usar overwrite = TRUE.")
         error_code <- 1
       }
+    }else{
+      if(verbose)
+        cat("Não foram encontrados municípios duplicados na base de eficiência de PROCESSOS", "\n")
     }
 
     #### Resultados
@@ -49,6 +58,10 @@ test_duplicate_data <- function(overwrite, verbose) {
       dplyr::ungroup()
 
     if(nrow(ef_muns_res_dup) > 0){
+      if(verbose){
+        cat(paste0("Municípios duplicados em ef_muns_res: ","\n"))
+        cat(capture.output(print(ef_muns_res_dup)), sep = "\n")
+      }
       if(overwrite){
         ef_muns_res <- ef_muns_res |>
           dplyr::group_by(ibge, ano) |>
@@ -58,17 +71,15 @@ test_duplicate_data <- function(overwrite, verbose) {
         cat("Escrevendo nova base de eficiência de RESULTADOS sem duplicatas", "\n")
         data.table::fwrite(ef_muns_res, here::here("data-raw/eficiencia_resultados_corrigida_2022_2023.csv"))
       } else {
+
         stop("Encontrado um ou mais municípios duplicados na base de eficiência de RESULTADOS, corrigir duplicatas ou usar overwrite = TRUE.")
         error_code <- 2
       }
+    }else{
+      if(verbose)
+        cat("Não foram encontrados municípios duplicados na base de eficiência de RESULTADOS", "\n")
     }
 
-    if(verbose){
-      cat("Municípios duplicados em ef_muns_proc: ", "\n")
-      cat(capture.output(print(ef_muns_proc_dup)), sep = "\n")
-      cat(paste0("Municípios duplicados em ef_muns_res: ","\n"))
-      cat(capture.output(print(ef_muns_res_dup)), sep = "\n")
-    }
 
 
     ## Não houve erros

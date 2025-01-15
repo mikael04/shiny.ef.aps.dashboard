@@ -27,16 +27,13 @@ source("R/fct_test_duplicate_data.R")
 library(ggplot2)
 library(patchwork)
 
-func_transform_data <- function(verbose, overwrite_data, update_db){
+func_transform_data <- function(verbose){
   if(F){
     verbose <- T
     overwrite_data <- T
     update_db <- T
   }
   if(verbose) print(paste0("Iniciando processo de transformação"))
-
-  ## Não mostrar mensagens do dplyr
-  if(!verbose) options(dplyr.summarise.inform = FALSE)
   ## Sobrescrever dados RDS e RDA
   use_RDS <- T
   use_RDA <- T
@@ -46,14 +43,14 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
   if(overwrite_data){
     ## Checando se dados recebidos são os mesmos já utilizados (ou se precisa uma nova transformação)
     result_test_cols_data <- func_test_cols_data(verbose)
-    if(result_test_cols_data > 0){
+    if(result_test_data > 0){
       stop("Parando execução, dados de eficiência não são os mesmos utilizados anteriormente,
            ajustes precisam ser feitos.")
     }else{
       if(verbose)
       cat("Dados de eficiência são os mesmos utilizados anteriormente, continuando com a transformação e atualização dos dados.")
     }
-    result_test_duplicate_data <- func_test_duplicate_data(overwrite = F, verbose)
+    result_test_duplicate_data <- func_test_duplicate_data(overwrite_data, verbose)
 
     # Lendo dados ----
     ## Geométricos ----
@@ -91,9 +88,7 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
       dplyr::distinct(cod_ibge, .keep_all = T) |>
       dplyr::inner_join(dados_munic_uf_regiao_regsaude) |>
       dplyr::select(cod_ibge, nome_mun, nome_uf,
-                    ied) |>
-
-      suppressWarnings()
+                    ied)
 
     ## Filtrando apenas os que possuem dados
     df_dados_mun_uf_reg_saud_filter <- dados_munic_uf_regiao_regsaude |>
@@ -213,7 +208,12 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
       dplyr::select(cod_ibge, nome_mun, quad_cod, CO_REGSAUD, nome_uf, resultados = ef_BCC) |>
       tidyr::pivot_wider(names_from = quad_cod,
                          names_prefix = "resultados_",
-                         values_from = resultados)
+                         values_from = resultados,
+                         values_fill = sum)
+
+    ef_muns_res |>
+      dplyr::summarise(n = dplyr::n(), .by = c(cod_ibge, nome_mun, CO_REGSAUD, nome_uf, quad_cod)) |>
+      dplyr::filter(n > 1)
 
     ## Eficiência UFs ----
     ### Criando DF de teste com estados e eficiências

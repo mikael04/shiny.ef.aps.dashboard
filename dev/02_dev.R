@@ -51,7 +51,7 @@ golem::add_module(name = "modal_faixa_cmp", with_test = F) # Name of the module
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 ## Transformação de dados
-golem::add_fct("transform_data_rda", with_test = F)
+golem::add_fct("transform_data", with_test = F)
 golem::add_fct("transf_data_res", with_test = F)
 ### Gráficos iniciais
 golem::add_fct("init_dfs_iniciais", with_test = F)

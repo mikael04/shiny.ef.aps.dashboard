@@ -18,7 +18,7 @@ Pré-requisitos:
 
 Após instalar as dependências, para rodar em modo de testes, é possível utilizar o comando `golem:::run_dev()` no console do RStudio, onde ele fará o carregamento dos pacotes e funções necessárias e irá rodar, por padrão na porta 4000. Para rodar em modo de produção, é possível utilizar o comando `Rscript app.R` na pasta raíz do projeto no console.
 
-Caso alterações sejam feitas nos dados, é necessário que um novo pré-processamento de dados precise ser feito, para isso, os passos podem ser rodados na função `pre/pre-proc.R`\`.
+Caso alterações sejam feitas nos dados, é necessário que um novo pré-processamento de dados precise ser feito, para isso, os passos podem ser rodados na função `pre/pre-proc.R`\`. Teste.
 
 ## Estrutura do projeto
 

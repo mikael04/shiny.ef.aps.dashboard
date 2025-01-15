@@ -25,7 +25,7 @@ func_applyFilters <- function(
     # func_aux_graph_lollipop_outputs_proc_2,
     # func_create_tooltip_ef
     ){
-  browser()
+  # browser()
   # Formato novo, usando a seleção por quadrimestres, apenas calculando valores
   # para passar por parâmetro
   if(tipo_quad){

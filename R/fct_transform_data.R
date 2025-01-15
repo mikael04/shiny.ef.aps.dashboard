@@ -50,7 +50,7 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
       if(verbose)
       cat("Dados de eficiência são os mesmos utilizados anteriormente, continuando com a transformação e atualização dos dados.")
     }
-    result_test_duplicate_data <- func_test_duplicate_data(overwrite_data = F, verbose)
+    result_test_duplicate_data <- func_test_duplicate_data(overwrite = F, verbose)
 
     # Lendo dados ----
     ## Geométricos ----
@@ -208,12 +208,7 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
       dplyr::select(cod_ibge, nome_mun, quad_cod, CO_REGSAUD, nome_uf, resultados = ef_BCC) |>
       tidyr::pivot_wider(names_from = quad_cod,
                          names_prefix = "resultados_",
-                         values_from = resultados,
-                         values_fill = sum)
-
-    ef_muns_res |>
-      dplyr::summarise(n = dplyr::n(), .by = c(cod_ibge, nome_mun, CO_REGSAUD, nome_uf, quad_cod)) |>
-      dplyr::filter(n > 1)
+                         values_from = resultados)
 
     ## Eficiência UFs ----
     ### Criando DF de teste com estados e eficiências

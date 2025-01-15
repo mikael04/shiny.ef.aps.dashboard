@@ -1,6 +1,5 @@
 ## Script criado para rodar as etapas de pré-processamento dos dados.
 
-getwd()
 # Carregando funções
 source(here::here("R/fct_transform_data.R"))
 source(here::here("R/fct_test_cols_data.R"))
@@ -9,7 +8,7 @@ source(here::here("R/fct_test_duplicate_data.R"))
 ## Parâmetros globais
 overwrite <- T
 verbose <- T
-update_db <- T
+ update_db <- T
 
 ## Outro ponto importante é as configurações da base de dados alvo, por padrão,
 ## o banco de dados utilizado é o que está em produção, portanto deve se tomar cuidado ao rodar o script

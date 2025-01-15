@@ -101,7 +101,8 @@ golem::add_utils("environment", with_test = F)
 golem::add_fct("update_data_PostgreSQL", with_test = F)
 
 ## Test
-golem::add_fct("test_data", with_test = F)
+golem::add_fct("test_cols_data", with_test = F)
+golem::add_fct("test_duplicate_data", with_test = F)
 
 
 ## External resources

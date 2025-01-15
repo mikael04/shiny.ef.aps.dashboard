@@ -22,25 +22,27 @@ source("R/fct_server_mod_mapa.R")
 source("R/fct_server_mod_tabela_ef.R")
 source("R/fct_transform_data_to_download.R")
 source("R/fct_update_data_PostgreSQL.R")
-source("R/fct_test_data.R")
+source("R/fct_test_cols_data.R")
+source("R/fct_test_duplicate_data.R")
 library(ggplot2)
 library(patchwork)
-## Chamando a função para recriar dados
-# func_transform_data_rda()
 
-func_transform_data_rda <- function(){
-  verbose <- F
+func_transform_data <- function(verbose){
+  if(F){
+    verbose <- T
+    overwrite_data <- T
+    update_db <- T
+  }
   if(verbose) print(paste0("Iniciando processo de transformação"))
-  overwrite_data <- T
+  ## Sobrescrever dados RDS e RDA
   use_RDS <- T
   use_RDA <- T
-  update_db <- T
 
   ## Ao invés de usar 6, usaremos o último disponível, portanto não será setado manualmente
   # sel_period <- 6L
   if(overwrite_data){
     ## Checando se dados recebidos são os mesmos já utilizados (ou se precisa uma nova transformação)
-    result_test_data <- func_test_data()
+    result_test_cols_data <- func_test_cols_data(verbose)
     if(result_test_data > 0){
       stop("Parando execução, dados de eficiência não são os mesmos utilizados anteriormente,
            ajustes precisam ser feitos.")
@@ -48,6 +50,7 @@ func_transform_data_rda <- function(){
       if(verbose)
       cat("Dados de eficiência são os mesmos utilizados anteriormente, continuando com a transformação e atualização dos dados.")
     }
+    result_test_duplicate_data <- func_test_duplicate_data(overwrite_data, verbose)
 
     # Lendo dados ----
     ## Geométricos ----
@@ -146,7 +149,7 @@ func_transform_data_rda <- function(){
 
     sel_period_proc <- max(ef_muns_proc$quad_cod)
 
-    ef_muns_res <- data.table::fread(here::here("data-raw/efi_resultados_2022_2023_eq.csv")) |>
+    ef_muns_res <- data.table::fread(here::here("data-raw/eficiencia_resultados_corrigida_2022_2023.csv")) |>
       dplyr::rename(cod_ibge = ibge) |>
       ## Unindo e adicionando variáveis que serão necessárias à um único banco
       dplyr::left_join(dados_munic_uf_regiao_regsaude, by = "cod_ibge") |>
@@ -205,7 +208,12 @@ func_transform_data_rda <- function(){
       dplyr::select(cod_ibge, nome_mun, quad_cod, CO_REGSAUD, nome_uf, resultados = ef_BCC) |>
       tidyr::pivot_wider(names_from = quad_cod,
                          names_prefix = "resultados_",
-                         values_from = resultados)
+                         values_from = resultados,
+                         values_fill = sum)
+
+    ef_muns_res |>
+      dplyr::summarise(n = dplyr::n(), .by = c(cod_ibge, nome_mun, CO_REGSAUD, nome_uf, quad_cod)) |>
+      dplyr::filter(n > 1)
 
     ## Eficiência UFs ----
     ### Criando DF de teste com estados e eficiências
@@ -425,7 +433,7 @@ func_transform_data_rda <- function(){
   }
 }
 
-# func_transform_data_rda()
+# func_transform_data()
 
 
 # ## Manipulando dados apenas para resolver município duplicado

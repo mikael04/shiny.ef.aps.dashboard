@@ -60,6 +60,7 @@
   align-items: center;
   justify-content: center;
   margin-top: -2vh;
+  z-index: 9;
 }
 .nomelegenda{
   padding-left: 0.3vw !important;

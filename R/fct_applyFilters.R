@@ -114,6 +114,9 @@ func_applyFilters <- function(
       reg_saude_mun_sel <- df_mun_sel |>
         dplyr::pull(CO_REGSAUD)
 
+      ef_muns_period_ <- ef_muns_period |>
+        dplyr::collect()
+
       ef_df_quad_sel <- ef_muns_period |>
         dplyr::filter(CO_REGSAUD == reg_saude_mun_sel) |>
         dplyr::collect()

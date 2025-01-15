@@ -1,11 +1,11 @@
-#' test_data
+#' test_cols_data
 #'
-#' @description A fct function
+#' @description Uma função que irá testar se os dados possuem as colunas necessárias
 #'
-#' @return The return value, if any, from executing the function.
+#' @return Retorna o tipo de erro associado (0 sendo não-erro, demais valores erros)
 #'
 #' @noRd
-func_test_data <- function() {
+func_test_cols_data <- function(verbose) {
   result <- tryCatch({
     ### Lendo as bases
     ef_muns_proc <- data.table::fread(here::here("data-raw/eficiencia_processos_corrigida_2022_2023.csv"))
@@ -64,17 +64,22 @@ func_test_data <- function() {
       error_code <- 3
     }
     not_in_cols_res <- ""
+
+    ## Não houve erros
     error_code <- 0
 
   }, error = function(e) {
     # Handle the error
-    cat("Um erro aconteceu:", conditionMessage(e), "\n")
+    if(verbose)
+      cat("Um erro aconteceu:", conditionMessage(e), "\n")
     if(!has_col_names_proc){
-      cat("Colunas faltantes em in ef_muns_proc: ", not_in_cols_proc, "\n")
+      if(verbose)
+        cat("Colunas faltantes em in ef_muns_proc: ", not_in_cols_proc, "\n")
       error_code <- 2
     }
     if(!has_col_names_res){
-      cat("Colunas faltantes em ef_muns_res: ", not_in_cols_res, "\n")
+      if(verbose)
+        cat("Colunas faltantes em ef_muns_res: ", not_in_cols_res, "\n")
       error_code <- 3
     }
   })

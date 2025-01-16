@@ -1,0 +1,66 @@
+name: shiny.ef.aps.dashboard deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Verificando secrets
+      - name: Check VPS_HOST secret
+        run: |
+          if [ -z "$VPS_HOST"] ; then
+            echo "Error: VPS_HOST is empty"
+            exit 1
+          fi
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+      # Usar as actions via SSH para se conectar na VPS e rodar o script
+      - name: Deploy to VPS
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.VPS_HOST }}
+          REMOTE_USER: root
+          REMOTE_PORT: 22
+          SOURCE: "./"                       # what folder to rsync from
+          TARGET: "/srv/shiny-server/shiny.ef.aps.dashboard/"  # remote folder
+          ARGS: "-rlgoDzv0 --delete"
+          exclude: |
+            .git/
+            .github/
+            .gitignore
+
+          # Run your commands AFTER code is synced
+          SCRIPT_AFTER: |
+            cd /srv/shiny-server/shiny.ef.aps.dashboard
+
+            # Create .Renviron file
+            echo "Creating .Renviron"
+            cat <<EOF > .Renviron
+            # .Renviron
+            R_CONFIG_ACTIVE=production
+            EOF
+
+            # Stop existing R Process
+            echo "Stopping old R process..."
+            pkill -f "Rscript app.R" || true
+
+            # Optionally install/refresh R packages
+            # Rscript -e "install.packages('remotes'); remotes::install_deps()"
+
+            echo "Starting new R script..."
+            nohup Rscript app.R > app.log 2>&1 &
+
+            echo "Deployment completed"

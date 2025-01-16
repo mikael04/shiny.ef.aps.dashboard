@@ -36,11 +36,8 @@ jobs:
           REMOTE_PORT: 22
           SOURCE: "./"                       # what folder to rsync from
           TARGET: "/srv/shiny-server/shiny.ef.aps.dashboard/"  # remote folder
-          ARGS: "-rlgoDzv0 --delete"
-          exclude: |
-            .git/
-            .github/
-            .gitignore
+          ARGS: "-rlgoDzvc --delete"
+          exclude: ".git,.github,.gitignore,node_modules"
 
           # Run your commands AFTER code is synced
           SCRIPT_AFTER: |

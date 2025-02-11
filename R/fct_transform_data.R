@@ -364,7 +364,8 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
       saveRDS(df_muns_res_download, file = "data/database_data/df_muns_res_download.rds")
       ## Após salvar dados utilizados no formato .rds, atualizar o banco de dados
       if(update_db){
-        func_update_data_PostreSQL(verbose)
+        ## Sempre true, isso não deve rodar no docker
+        func_update_data_PostreSQL(verbose, local = T)
       }
     }
 

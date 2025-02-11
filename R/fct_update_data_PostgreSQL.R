@@ -10,12 +10,12 @@ library(DBI)
 library(RPostgreSQL)
 source("R/utils_db.R")
 
-func_update_data_PostreSQL <- function(verbose){
+func_update_data_PostreSQL <- function(verbose, local){
   if(F){
     verbose <- T
   }
   ## Conectando com o banco de dados
-  con <- utils_db_connect()
+  con <- utils_db_connect(local)
 
   ## Lendos dados dos arquivos rda
   list_files <- list.files(path = "data/database_data", pattern = ".rds", full.names = T)

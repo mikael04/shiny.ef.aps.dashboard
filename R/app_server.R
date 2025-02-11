@@ -66,7 +66,9 @@ app_server <- function(input, output, session) {
   title_period <- reactiveVal(sel_period)
 
   # 0.2 DB Con ----
-  con <- utils_db_connect() ##utils_db
+  ## Local - T -> Rodando shiny local. Local - F -> Rodando shiny no docker
+  local <- F
+  con <- utils_db_connect(local) ##utils_db
 
   # 1. Dados ----
   ## Atualmente os dados são lidos automaticamente, por estarem na pasta data

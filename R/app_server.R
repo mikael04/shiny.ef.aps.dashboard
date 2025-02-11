@@ -5,6 +5,8 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
+  ## Adicionando o library para resolver problema no docker de não ter a função ggplot
+  library(ggplot2)
   # 0.1 Variáveis iniciais ----
   # Usando dados no formato .rda, carregados no pacote
   data_rda <- F

@@ -7,7 +7,7 @@
 #' @noRd
 utils_db_config <- function(local) {
   if(local){
-    config::get("db", file = "../shiny.ef.aps.dashboard.config/golem-config.yml")
+    list <- config::get("db", file = "../shiny.ef.aps.dashboard.config/golem-config.yml")
   }
   docker = !local
   if(docker){
@@ -16,8 +16,9 @@ utils_db_config <- function(local) {
     dbname <- Sys.getenv("POSTGRES_DB")
     user <- Sys.getenv("POSTGRES_USER")
     password <- Sys.getenv("POSTGRES_PASSWORD")
-    list(host = host, port = port, dbname = dbname, user = user, password = password)
+    list <-list(host = host, port = port, dbname = dbname, user = user, password = password)
   }
+  list
 }
 
 utils_db_connect <- function(local) {

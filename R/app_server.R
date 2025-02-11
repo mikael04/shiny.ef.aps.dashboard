@@ -173,16 +173,180 @@ app_server <- function(input, output, session) {
   #   closeOnClickOutside = T
   # )
   ## 2.1 Gráficos iniciais ----
-  ### Título da caixa do mapa
-  ## Reativos porque podemos mudar a eficiência e consequentemente os gráficos e títulos
-  # title_ef_def <- title_ef_def("Processos")
-  ## Mapa do brasil
-  # mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = T)
-  # ## Tabela de eficiência das UFs
-  # mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = T)
-  # ### Inputs e outputs
-  # mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-  #                                          initial_state = T, ef_proc_res = T, list_graphs_inputs_outputs = NULL)
+  ## 2.0 Reatividade Gráficos Iniciais
+  ## Para otimizar a geração dos gráficos, foi feito as versões iniciais
+  ## junto com versões reativas do seletor
+  observeEvent(input$seletor_ef, {
+    ## Alterando caixa de seleção de período
+    if(!input$seletor_ef){
+      # title_ef_def <- title_ef_def("Resultados")
+      # subtitle_metricas_period = subtitle_metricas_period("no ano")
+      # title_period = title_period(sel_period_name_ano)
+      updateSelectizeInput(session,
+                           "sel_period",
+                           label = "Selecione ano:",
+                           choices = c("2022", "2023"), selected = "2023")
+    }else{
+      # title_ef_def <- title_ef_def("Processos")
+      # subtitle_metricas_period = subtitle_metricas_period("no período")
+      # title_period = title_period(sel_period_name_quad)
+      updateSelectizeInput(session,
+                           "sel_period",
+                           label = "Selecione o quadrimestre:",
+                           choices = choices_quad, selected = choices_quad[nrow(df_quad)])
+    }
+    ## Se for a versão inicial da aplicação, apenas alterar os gráficos
+    if(initial_state() && input$type == "no_sel"){
+      if(input$seletor_ef){
+        ## Alterando títulos
+        title_ef_def <- title_ef_def("Processos")
+        subtitle_metricas_period = subtitle_metricas_period("no período")
+        title_period = title_period(sel_period_name_quad)
+        ## Alterando gráficos iniciais
+        ## Mapa do brasil
+        mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = input$seletor_ef)
+        ## Tabela de eficiência das UFs
+        mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = input$seletor_ef)
+        ### Inputs e outputs
+        mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                                 initial_state = T, ef_proc_res = input$seletor_ef,
+                                                 list_graphs_inputs_outputs = NULL, newcase)
+
+      }else{
+        ## Alterando títulos
+        title_ef_def <- title_ef_def("Resultados")
+        subtitle_metricas_period = subtitle_metricas_period("no ano")
+        title_period = title_period(sel_period_name_ano)
+
+        ## Alterando gráficos iniciais
+        ## Mapa do brasil
+        mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = input$seletor_ef)
+        ## Tabela de eficiência das UFs
+        mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = input$seletor_ef)
+        ### Inputs e outputs
+        mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                                 initial_state = T, ef_proc_res = input$seletor_ef,
+                                                 list_graphs_inputs_outputs = NULL, newcase)
+      }
+      ## Senão for a versão inicial da aplicação, apresentar popup para troca
+    }else{
+      mod_modal_server("modal_2", title = "Troca de eficiência",
+                       first_test = "Você deseja trocar a eficiência?",
+                       mid_text = " Ao trocar a eficiência, <b>os gráficos apresentados serão alterados.</b>",
+                       end_text = " Se sim, </b>clique em 'Aplicar filtros'</b> novamente para ver os novos gráficos.")
+    }
+  })
+  ## 2.2 Títulos iniciais de mapa e gráfico de eficiência ----
+  ## Atualizando nome do período
+  output$title_map <- renderUI({
+    div(class="titles-graph title-map",
+        span(HTML(paste0("Eficiência de <b>", title_ef_def(), "</b> ", title_map_tab_loc()))),
+        br(),
+        span(class = "subtitle", ifelse(input$seletor_ef, "No período ", "No ano "), title_period())
+    )
+  })
+  ### Título do gráfico de eficiência
+  output$title_ef <- renderUI({
+    div(class="titles-graph title-ef",
+        span(HTML(paste0("Métricas de Eficiência "))),
+        span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
+        br(),
+        span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
+    )
+  })
+  ## Versões reativas
+  observeEvent(input$applyFilters,{
+    ## Atualizando nome do período
+    output$title_map <- renderUI({
+      div(class="titles-graph title-map",
+          span(HTML(paste0("Eficiência de <b>", title_ef_def(), "</b> ", title_map_tab_loc()))),
+          br(),
+          span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
+      )
+    })
+    ### Título do gráfico de eficiência
+    output$title_ef <- renderUI({
+      div(class="titles-graph title-ef",
+          span(HTML(paste0("Métricas de Eficiência "))),
+          span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
+          br(),
+          span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
+      )
+    })
+    if(initial_state()){
+      # browser()
+      ## 2.3 Gráfico de eficiência ----
+      output$box_graf_ef <- renderUI({
+        div(
+          id = "graf-ef",
+          class="row",
+          div(class= "col-12",
+              bslib::card(
+                id = "cardInputsOutputs",
+                class = "ui-cards",
+                fill = F,
+                max_height = "55vh",
+                uiOutput("title_ef"),
+                # ## Gráfico de inputs e outputs
+                mod_graph_lollipop_inputs_outputs_ui("graph_lollipop_inputs_outputs_1"),
+                HTML('
+                        <div class="legenda">
+                          <span class="dot dot1"></span> <span class="nomelegenda"> Município eficiente</span>
+                          <span class="dot dot2"></span> <span class="nomelegenda"> Valor para 100% de eficiência</span>
+                          <span class="dot dot3"></span> <span class="nomelegenda"> Valor do município selecionado</span>
+                          <span class="dot dot4"></span> <span class="nomelegenda"> Valor município de comparação</span>
+                        </div>
+                      ')
+              )
+          )
+        )
+      })
+    }else{
+      ## UF
+      if(input$type == "uf"){
+        output$box_graf_ef <- renderUI({
+          NULL
+        })
+      }
+      ## Município
+      if(input$type == "mun"){
+        output$box_graf_ef <- renderUI({
+          div(
+            id = "graf-ef",
+            class="row",
+            div(class= "col-12",
+                bslib::card(
+                  id = "cardInputsOutputs",
+                  class = "ui-cards",
+                  fill = F,
+                  max_height = "55vh",
+                  uiOutput("title_ef"),
+                  # ## Gráfico de inputs e outputs
+                  mod_graph_lollipop_inputs_outputs_ui("graph_lollipop_inputs_outputs_1"),
+                  HTML('
+                        <div class="legenda">
+                          <span class="dot dot1"></span> <span class="nomelegenda"> Município eficiente</span>
+                          <span class="dot dot2"></span> <span class="nomelegenda"> Valor para 100% de eficiência</span>
+                          <span class="dot dot3"></span> <span class="nomelegenda"> Valor do município selecionado</span>
+                          <span class="dot dot4"></span> <span class="nomelegenda"> Valor município de comparação</span>
+                        </div>
+                      ')
+                )
+            )
+          )
+        })
+      }
+      # Região de saúde
+      if(input$type == "reg_saude"){
+        func_selector_att_type(session, output, input$sel_uf_1, "sel_reg_saude_1", df_dados_mun_uf_reg_saud_filter, mun_regsaude = 2, df_cap_uf_ibge)
+        # func_cmp_button(session, output, input$type, "outra região de saúde")
+        output$box_graf_ef <- renderUI({
+          NULL
+        })
+      }
+    }
+  })
+  ## 2.3 Caixa do gráfico de eficiência ----
   output$box_graf_ef <- renderUI({
     div(
       id = "graf-ef",
@@ -877,178 +1041,7 @@ app_server <- function(input, output, session) {
     }
   })
 
-  ## 5.2 Gráficos iniciais ----
-  ### Título da caixa do mapa
-  observeEvent(input$seletor_ef, {
-    ## Alterando caixa de seleção de período
-    if(!input$seletor_ef){
-      # title_ef_def <- title_ef_def("Resultados")
-      # subtitle_metricas_period = subtitle_metricas_period("no ano")
-      # title_period = title_period(sel_period_name_ano)
-      updateSelectizeInput(session,
-                           "sel_period",
-                           label = "Selecione ano:",
-                           choices = c("2022", "2023"), selected = "2023")
-    }else{
-      # title_ef_def <- title_ef_def("Processos")
-      # subtitle_metricas_period = subtitle_metricas_period("no período")
-      # title_period = title_period(sel_period_name_quad)
-      updateSelectizeInput(session,
-                           "sel_period",
-                           label = "Selecione o quadrimestre:",
-                           choices = choices_quad, selected = choices_quad[nrow(df_quad)])
-    }
-    ## Se for a versão inicial da aplicação, apenas alterar os gráficos
-    if(initial_state() && input$type == "no_sel"){
-      if(input$seletor_ef){
-        ## Alterando títulos
-        title_ef_def <- title_ef_def("Processos")
-        subtitle_metricas_period = subtitle_metricas_period("no período")
-        title_period = title_period(sel_period_name_quad)
-        ## Alterando gráficos iniciais
-        ## Mapa do brasil
-        mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = input$seletor_ef)
-        ## Tabela de eficiência das UFs
-        mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = input$seletor_ef)
-        ### Inputs e outputs
-        mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                                 initial_state = T, ef_proc_res = input$seletor_ef,
-                                                 list_graphs_inputs_outputs = NULL, newcase)
 
-      }else{
-        ## Alterando títulos
-        title_ef_def <- title_ef_def("Resultados")
-        subtitle_metricas_period = subtitle_metricas_period("no ano")
-        title_period = title_period(sel_period_name_ano)
-
-        ## Alterando gráficos iniciais
-        ## Mapa do brasil
-        mod_mapa_server("mapa_1", T, ggiraph_map = NULL, ef_proc_res = input$seletor_ef)
-        ## Tabela de eficiência das UFs
-        mod_tabela_ef_server("tabela_ef_1", T, gt_tabela = NULL, ef_proc_res = input$seletor_ef)
-        ### Inputs e outputs
-        mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                                 initial_state = T, ef_proc_res = input$seletor_ef,
-                                                 list_graphs_inputs_outputs = NULL, newcase)
-      }
-    ## Senão for a versão inicial da aplicação, apresentar popup para troca
-    }else{
-      mod_modal_server("modal_2", title = "Troca de eficiência",
-                       first_test = "Você deseja trocar a eficiência?",
-                       mid_text = " Ao trocar a eficiência, <b>os gráficos apresentados serão alterados.</b>",
-                       end_text = " Se sim, </b>clique em 'Aplicar filtros'</b> novamente para ver os novos gráficos.")
-    }
-  })
-  ## Versão inicial da aplicação dos títulos de mapa e gráfico de eficiência
-  ## Atualizando nome do período
-  output$title_map <- renderUI({
-    div(class="titles-graph title-map",
-        span(HTML(paste0("Eficiência de <b>", title_ef_def(), "</b> ", title_map_tab_loc()))),
-        br(),
-        span(class = "subtitle", ifelse(input$seletor_ef, "No período ", "No ano "), title_period())
-    )
-  })
-  ### Título do gráfico de eficiência
-  output$title_ef <- renderUI({
-    div(class="titles-graph title-ef",
-        span(HTML(paste0("Métricas de Eficiência "))),
-        span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
-        br(),
-        span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
-    )
-  })
-  ## Versões reativas
-  observeEvent(input$applyFilters,{
-    ## Atualizando nome do período
-    output$title_map <- renderUI({
-      div(class="titles-graph title-map",
-          span(HTML(paste0("Eficiência de <b>", title_ef_def(), "</b> ", title_map_tab_loc()))),
-          br(),
-          span(class = "subtitle", ifelse(!input$seletor_ef, "No período ", "No ano "), title_period())
-      )
-    })
-    ### Título do gráfico de eficiência
-    output$title_ef <- renderUI({
-      div(class="titles-graph title-ef",
-          span(HTML(paste0("Métricas de Eficiência "))),
-          span(class="title-mun-sel", HTML(paste0(title_ef_loc()))),
-          br(),
-          span(class = "subtitle", HTML(paste0("De <b>", title_ef_def() ,"</b> ", subtitle_metricas_period())))
-      )
-    })
-    if(initial_state()){
-      # browser()
-      ## 5.2.1 Gráfico de eficiência ----
-      output$box_graf_ef <- renderUI({
-        div(
-          id = "graf-ef",
-          class="row",
-          div(class= "col-12",
-              bslib::card(
-                id = "cardInputsOutputs",
-                class = "ui-cards",
-                fill = F,
-                max_height = "55vh",
-                uiOutput("title_ef"),
-                # ## Gráfico de inputs e outputs
-                mod_graph_lollipop_inputs_outputs_ui("graph_lollipop_inputs_outputs_1"),
-                HTML('
-                        <div class="legenda">
-                          <span class="dot dot1"></span> <span class="nomelegenda"> Município eficiente</span>
-                          <span class="dot dot2"></span> <span class="nomelegenda"> Valor para 100% de eficiência</span>
-                          <span class="dot dot3"></span> <span class="nomelegenda"> Valor do município selecionado</span>
-                          <span class="dot dot4"></span> <span class="nomelegenda"> Valor município de comparação</span>
-                        </div>
-                      ')
-              )
-          )
-        )
-      })
-    }else{
-      ## UF
-      if(input$type == "uf"){
-        output$box_graf_ef <- renderUI({
-          NULL
-        })
-      }
-      ## Município
-      if(input$type == "mun"){
-        output$box_graf_ef <- renderUI({
-          div(
-            id = "graf-ef",
-            class="row",
-            div(class= "col-12",
-                bslib::card(
-                  id = "cardInputsOutputs",
-                  class = "ui-cards",
-                  fill = F,
-                  max_height = "55vh",
-                  uiOutput("title_ef"),
-                  # ## Gráfico de inputs e outputs
-                  mod_graph_lollipop_inputs_outputs_ui("graph_lollipop_inputs_outputs_1"),
-                  HTML('
-                        <div class="legenda">
-                          <span class="dot dot1"></span> <span class="nomelegenda"> Município eficiente</span>
-                          <span class="dot dot2"></span> <span class="nomelegenda"> Valor para 100% de eficiência</span>
-                          <span class="dot dot3"></span> <span class="nomelegenda"> Valor do município selecionado</span>
-                          <span class="dot dot4"></span> <span class="nomelegenda"> Valor município de comparação</span>
-                        </div>
-                      ')
-                )
-            )
-          )
-        })
-      }
-      # Região de saúde
-      if(input$type == "reg_saude"){
-        func_selector_att_type(session, output, input$sel_uf_1, "sel_reg_saude_1", df_dados_mun_uf_reg_saud_filter, mun_regsaude = 2, df_cap_uf_ibge)
-        # func_cmp_button(session, output, input$type, "outra região de saúde")
-        output$box_graf_ef <- renderUI({
-          NULL
-        })
-      }
-    }
-  })
 
   # 6. Reiniciar gráficos (botão) ----
   observeEvent(input$resetFilters, {

@@ -28,5 +28,5 @@ O projeto está estruturado em pastas, onde cada uma delas tem um propósito esp
 -   `data-raw/`: Pasta onde estão os dados originais, que foram recebidos de diversas fontes e compõe os dados base para construção do painel.
 -   `dev`: Pasta onde estão os scripts do framework Golem para criação e desenvolvimento da aplicação (alterados conforme necessidade do projeto).
 -   `inst/`: Pasta onde estão os arquivos de configuração, arquivos de estilo (css criados e bibliotecas css utilizadas) e demais funcionalidades web (scripts js criados e bibliotecas javascript utilizadas).
--   `man/`: Pasta onde estão algumas documentações de suporte para o uso da aplicação Shiny.
+-   `guides/`: Pasta onde estão algumas documentações de suporte para o uso da aplicação Shiny.
 -   `R/`: Pasta onde estão os scripts de funções do dashboard, onde boa parte do código desenvolvido está.

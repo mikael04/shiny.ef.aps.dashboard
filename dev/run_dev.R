@@ -12,5 +12,8 @@ golem::detach_all_attached()
 # Document and reload your package
 golem::document_and_reload()
 
+## Adicionando solução para rodar funções assync do Extended Task no Golem
+devtools::install_local(".", upgrade = "never", force = TRUE)
+
 # Run the application
 run_app()

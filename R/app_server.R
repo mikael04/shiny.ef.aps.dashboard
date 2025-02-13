@@ -483,6 +483,13 @@ app_server <- function(input, output, session) {
   })
 
   # 3. Aplicar (aplicando filtros reativos) ----
+
+  # result_func <- ExtendedTask$new(function(x, y){
+  #   promises::future_promise({
+  #     Sys.sleep(1)
+  #     x + y
+  #   })
+  # }) |> bslib::bind_task_button("applyFilters")
   observeEvent(input$applyFilters, {
     initial_state(F)
     ## Inputs passados para promises
@@ -705,8 +712,51 @@ app_server <- function(input, output, session) {
                                                initial_state = F, ef_proc_res,
                                                list_graphs_inputs_outputs, newcase)
       shinyalert::closeAlert()
+
+      result_func$invoke(tipo_quad, graph_type, title_ef_def,
+                         list_dfs, con, data_from_bd,
+                         input_seletor_ef, input_type, input_sel_period,
+                         input_sel_period_name, input_sel_uf_1, input_sel_uf_2,
+                         input_sel_reg_saude_1, input_sel_reg_saude_2,
+                         input_sel_mun_1, input_sel_mun_2,
+                         flag_cmp, func_order_by_ef_sel)
+      # result_func$invoke(1, 2)
     }
   })
+  future::plan("multisession")
+  # extTask_test <- ExtendedTask$new(function(
+  #   df, uf_sel, mun_regsaud_sel, type, ef_proc_res
+  # ) {
+  # #   x, y
+  # # ){
+  #   # source("R/fct_check_has_data.R")
+  #   promises::future_promise({
+  #     func_check_has_data(df, uf_sel, mun_regsaud_sel, type, ef_proc_res)
+  #     # x + y
+  #   })
+  # }) |> bslib::bind_task_button("btn_extTask")
+  #
+  # observeEvent(input$btn_extTask, {
+  #   print("Clicando no botão e invocando task")
+  #   # browser()
+  #   # extTask_test$invoke(1, 2)
+  #
+  #   df_dados_mun_uf_reg_saud_filter <- readRDS(file = "data/database_data/df_dados_mun_uf_reg_saud_filter.rds")
+  #   input_sel_uf_1 <- "Acre"
+  #   input_sel_mun_1 <- "Rio Branco"
+  #   input_type <- "mun"
+  #   input_seletor_ef <- TRUE
+  #
+  #   extTask_test$invoke(df_dados_mun_uf_reg_saud_filter, input_sel_uf_1,
+  #                       input_sel_mun_1, input_type, input_seletor_ef)
+  # })
+  # output$table_extTask <- renderText({
+  #   print("Render resultado da task")
+  #   browser()
+  #   result <- extTask_test$result()
+  #   result
+  # })
+
   # 4. Reativ. UI ----
   ## 4.1 Caixas de seleção (Mun, Reg Saud, UF) ----
   ## Buscar por:

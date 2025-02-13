@@ -91,6 +91,14 @@ func_ui_panel <- function(session, id){
                 color = "success"
               )
             ),
+            # textOutput("table_extTask"),
+            uiOutput("table_extTask"),
+            # textOutput("sum"),
+            br(),
+            div(
+              class="text-center download",
+              bslib::input_task_button("btn_extTask", "Add numbers"),
+            ),
             br()
           )
         )
@@ -138,7 +146,7 @@ func_ui_panel <- function(session, id){
           ## 2a linha de gráficos ----
           ### Box com gráfico de eficiência que será apresentado para o Brasil (graf inicial)
           ### e para os municípios
-          uiOutput("box_graf_ef"),
+          uiOutput("box_graf_ef")
           ### Dois gráficos separados
           # div(
           #   class="row",

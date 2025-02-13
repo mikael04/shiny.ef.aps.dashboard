@@ -38,6 +38,8 @@ usethis::use_package("ggplot2") ## Gráficos
 # usethis::use_package("DBI") ## Conexão com banco de dados
 # usethis::use_package("RPostgreSQL") ## Conexão com banco de dados
 # usethis::use_package("dbplyr") ## Manipulações no SQL usando dplyr
+usethis::use_package("future") ## Assync
+usethis::use_package("promises") ## Assync
 
   ## Add modules ----
 ## Create a module infrastructure in R/

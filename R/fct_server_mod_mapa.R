@@ -37,16 +37,16 @@ func_server_mod_mapa <- function(ef_df, map_type, mun_sel, nome_mun_sel, title_e
     # browser()
     ## Mapa do país, com separação por estados, mapa inicial
     # title = paste0("<span class='title-map'>", title, "<span>")
-    ggplot_map <- ggplot(ef_df) +
-      ggiraph::geom_sf_interactive(aes(fill = !!as.name(var_ef), tooltip = tooltip, data_id = tooltip)) +
+    ggplot_map <- ggplot2::ggplot(ef_df) +
+      ggiraph::geom_sf_interactive(ggplot2::aes(fill = !!as.name(var_ef), tooltip = tooltip, data_id = tooltip)) +
       ggplot2::theme_void() +
       ggplot2::labs(
         fill = "Eficiência"
       ) +
       ggplot2::theme(plot.title = ggtext::element_markdown()) +
       # ggplot2::scale_fill_gradient2(low = "#B3C7F7", high = "#054FB9") +
-      ggplot2::guides(fill = guide_legend(theme = theme(
-        legend.title = element_text(size = 15, face = "bold", colour = "black")
+      ggplot2::guides(fill = ggplot2::guide_legend(theme = ggplot2::theme(
+        legend.title = ggplot2::element_text(size = 15, face = "bold", colour = "black")
       )))
     # ggplot_map
     # browser()
@@ -70,16 +70,16 @@ func_server_mod_mapa <- function(ef_df, map_type, mun_sel, nome_mun_sel, title_e
     # ef_df_mun <- ef_df |>
     #   dplyr::filter()
 
-    ggplot_map <- ggplot(ef_df) +
-      ggiraph::geom_sf_interactive(aes(fill = !!as.name(var_ef), tooltip = tooltip, data_id = tooltip)) +
+    ggplot_map <- ggplot2::ggplot(ef_df) +
+      ggiraph::geom_sf_interactive(ggplot2::aes(fill = !!as.name(var_ef), tooltip = tooltip, data_id = tooltip)) +
       ggplot2::theme_void() +
       ggplot2::theme(plot.title = ggtext::element_markdown()) +
       ggplot2::labs(
         fill = "Eficiência"
       ) +
       # ggplot2::scale_fill_gradient2(low = "#1CD1A2", high = "#141B48") +
-      ggplot2::guides(fill = guide_legend(theme = theme(
-        legend.title = element_text(size = 15, face = "bold", colour = "black")
+      ggplot2::guides(fill = ggplot2::guide_legend(theme = ggplot2::theme(
+        legend.title = ggplot2::element_text(size = 15, face = "bold", colour = "black")
       )))
 
     # ggiraph::girafe(ggobj = ggplot_map)

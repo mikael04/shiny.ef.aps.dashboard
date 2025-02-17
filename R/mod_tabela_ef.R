@@ -24,10 +24,11 @@ mod_tabela_ef_server <- function(id, initial_state, gt_tabela, ef_proc_res){
     if(teste_interno){
       df_tabela <- ef_df_ufs
     }
+    # browser()
     if(initial_state){
-      # browser()
       ## ef_proc_res = T -> Eficiência de resultados, F -> Eficiência de processos
       if(ef_proc_res){
+        # initial_gt_tabela_r <- readRDS(file = "data/initial_gt_tabela_r.rds")
         gt_tabela <- initial_gt_tabela_p
       }else{
         gt_tabela <- initial_gt_tabela_r

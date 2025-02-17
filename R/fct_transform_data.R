@@ -31,7 +31,7 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
   if(F){
     verbose <- T
     overwrite_data <- T
-    update_db <- T
+    update_db <- F
   }
   if(verbose) print(paste0("Iniciando processo de transformação"))
   ## Sobrescrever dados RDS e RDA
@@ -362,6 +362,8 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
       saveRDS(ef_br_quad, file = "data/database_data/ef_br_quad.rds")
       saveRDS(df_muns_proc_download, file = "data/database_data/df_muns_proc_download.rds")
       saveRDS(df_muns_res_download, file = "data/database_data/df_muns_res_download.rds")
+      saveRDS(initial_gt_tabela_p, file = "data/initial_gt_tabela_p.rds")
+      saveRDS(initial_gt_tabela_r, file = "data/initial_gt_tabela_r.rds")
       ## Após salvar dados utilizados no formato .rds, atualizar o banco de dados
       if(update_db){
         func_update_data_PostreSQL(verbose)
@@ -407,12 +409,12 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
     }
     if(use_RDS){
       print("Dados em formato RDS salvos")
-      print("dados_longitudinais, dados_munic_uf_regiao_regsaude, df_mun_cod_ibge,
+      print(paste0("dados_longitudinais, dados_munic_uf_regiao_regsaude, df_mun_cod_ibge,
           df_mun_cod_ibge_regsaude, df_dados_mun_uf_reg_saud_filter, df_mun_ied,
           df_cap_uf_ibge, ef_muns_proc, ef_muns_quad_proc, ef_muns_res, ef_muns_ano_res,
           ef_ufs_proc, ef_ufs_proc_quad, ef_br_proc, ef_br_proc_quad, ef_ufs_res,
           ef_ufs_res_quad, ef_br_res, ef_br_quad, df_muns_proc_download,
-          df_muns_res_download")
+          df_muns_res_download, initial_gt_tabela_p, initial_gt_tabela_r"))
 
       if(update_db){
         print("Banco de dados atualizado (verificar banco de dados destino)")
@@ -428,7 +430,7 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
   }
 }
 
-# func_transform_data()
+# func_transform_data(verbose = T, overwrite_data = T, update_db = F)
 
 
 # ## Manipulando dados apenas para resolver município duplicado

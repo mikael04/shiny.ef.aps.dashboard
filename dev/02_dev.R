@@ -25,16 +25,16 @@ attachment::att_amend_desc()
 # usethis::use_package("tidyr") ## Manipulação de dados
 # usethis::use_package("data.table") ## Manipulação de dados
 # usethis::use_package("sf") ## Trabalhar com dados geográficos
-# usethis::use_package("here") ## Lidar com diretório de execução
+# usethis::use_package("here") ## Diretório de execução
 usethis::use_package("ggplot2") ## Gráficos
 # usethis::use_package("ggiraph") ## Gráficos interativos
 # usethis::use_package("ggtext") ## Customizar títulos e texto no ggplot2
 # usethis::use_package("patchwork") ## Junção de gráficos
 # usethis::use_package("gt") ## Tabela
-# # usethis::use_package("future") ## Lidando com tasks assíncronas
-# # usethis::use_package("promises") ## Lidando com tasks assíncronas
-# # usethis::use_package("patchwork") ## Lidando com múltiplos gráficos
-# # usethis::use_package("shinycssloaders") ## Lidando com tasks assíncronas (loader gif)
+# # usethis::use_package("future") ## Tasks assíncronas
+# # usethis::use_package("promises") ## Tasks assíncronas
+# # usethis::use_package("patchwork") ## Múltiplos gráficos
+# # usethis::use_package("shinycssloaders") ## Tasks assíncronas (loader gif)
 # usethis::use_package("DBI") ## Conexão com banco de dados
 # usethis::use_package("RPostgreSQL") ## Conexão com banco de dados
 # usethis::use_package("dbplyr") ## Manipulações no SQL usando dplyr

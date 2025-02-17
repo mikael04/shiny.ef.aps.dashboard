@@ -14,7 +14,7 @@ func_applyFilters <- function(
     input_sel_period_name, input_sel_uf_1, input_sel_uf_2,
     input_sel_reg_saude_1, input_sel_reg_saude_2,
     input_sel_mun_1, input_sel_mun_2,
-    flag_cmp
+    flag_cmp, debug, extra_data
     ## Não usado dessa forma senão for promise
     # func_server_mod_tabela_ef, func_order_by_ef_sel,
     # func_server_mod_mapa,
@@ -37,24 +37,32 @@ func_applyFilters <- function(
     quad = sel_period-calc_ano*3
   }
 
-  ## Buscando dados no banco de dados
-  df_mun_cod_ibge_regsaude <- dplyr::tbl(con, "df_mun_cod_ibge_regsaude")
-  ef_muns_proc <- dplyr::tbl(con, "ef_muns_proc")
-  ef_muns_quad_proc <- dplyr::tbl(con, "ef_muns_quad_proc")
-  ef_muns_res <- dplyr::tbl(con, "ef_muns_res")
-  ef_muns_ano_res <- dplyr::tbl(con, "ef_muns_ano_res")
+  if(debug){
+    ## Buscando dados no banco de dados
+    df_mun_cod_ibge_regsaude <- dplyr::tbl(con, "df_mun_cod_ibge_regsaude")
+    ef_muns_proc <- dplyr::tbl(con, "ef_muns_proc")
+    ef_muns_quad_proc <- dplyr::tbl(con, "ef_muns_quad_proc")
+    ef_muns_res <- dplyr::tbl(con, "ef_muns_res")
+    ef_muns_ano_res <- dplyr::tbl(con, "ef_muns_ano_res")
 
-  if(data_from_bd){
-    df_mun_cod_ibge_regsaude <- df_mun_cod_ibge_regsaude |>
-      dplyr::select(-row.names)
-    ef_muns_proc <- ef_muns_proc |>
-      dplyr::select(-row.names)
-    ef_muns_quad_proc <- ef_muns_quad_proc |>
-      dplyr::select(-row.names)
-    ef_muns_res <- ef_muns_res |>
-      dplyr::select(-row.names)
-    ef_muns_ano_res <- ef_muns_ano_res |>
-      dplyr::select(-row.names)
+    if(data_from_bd){
+      df_mun_cod_ibge_regsaude <- df_mun_cod_ibge_regsaude |>
+        dplyr::select(-row.names)
+      ef_muns_proc <- ef_muns_proc |>
+        dplyr::select(-row.names)
+      ef_muns_quad_proc <- ef_muns_quad_proc |>
+        dplyr::select(-row.names)
+      ef_muns_res <- ef_muns_res |>
+        dplyr::select(-row.names)
+      ef_muns_ano_res <- ef_muns_ano_res |>
+        dplyr::select(-row.names)
+    }
+  }else{
+    df_mun_cod_ibge_regsaude <- extra_data[[1]]
+    ef_muns_proc <- extra_data[[2]]
+    ef_muns_quad_proc <- extra_data[[3]]
+    ef_muns_res <- extra_data[[4]]
+    ef_muns_ano_res <- extra_data[[5]]
   }
 
   ## Mudando conforme o seletor -> Se True, Processos; Se False, Resultados
@@ -79,8 +87,7 @@ func_applyFilters <- function(
     ## Filtrando dados do município selecionado
     df_mun_sel <- df_mun_cod_ibge_regsaude |>
       dplyr::filter(nome_uf == input_sel_uf_1, nome_mun == input_sel_mun_1) |>
-      dplyr::select(cod_ibge, nome_mun, CO_REGSAUD) |>
-      dplyr::collect()
+      dplyr::select(cod_ibge, nome_mun, CO_REGSAUD)
 
     ### Comparação ----
     if(!flag_cmp){
@@ -89,8 +96,7 @@ func_applyFilters <- function(
       ## Dados do município de comparação
       df_mun_cmp <- df_mun_cod_ibge_regsaude |>
         dplyr::filter(nome_uf == input_sel_uf_2, nome_mun == input_sel_mun_2) |>
-        dplyr::select(cod_ibge, nome_mun, CO_REGSAUD) |>
-        dplyr::collect()
+        dplyr::select(cod_ibge, nome_mun, CO_REGSAUD)
       ## Flag de comparação
       # flag_cmp <- T
     }
@@ -114,19 +120,16 @@ func_applyFilters <- function(
       reg_saude_mun_sel <- df_mun_sel |>
         dplyr::pull(CO_REGSAUD)
 
-      ef_muns_period_ <- ef_muns_period |>
-        dplyr::collect()
+      ef_muns_period_ <- ef_muns_period
 
       ef_df_quad_sel <- ef_muns_period |>
-        dplyr::filter(CO_REGSAUD == reg_saude_mun_sel) |>
-        dplyr::collect()
+        dplyr::filter(CO_REGSAUD == reg_saude_mun_sel)
 
       ### Buscando dados do município de comparação ----
       if(flag_cmp){
         cod_ibge_cmp <- unique(df_mun_cmp$cod_ibge)
         ef_df_cmp_quad_sel <- ef_muns_period |>
-          dplyr::filter(cod_ibge == cod_ibge_cmp) |>
-          dplyr::collect()
+          dplyr::filter(cod_ibge == cod_ibge_cmp)
 
         ### Adicionando comparação
         ef_df_quad_sel <- rbind(ef_df_quad_sel, ef_df_cmp_quad_sel)
@@ -149,8 +152,7 @@ func_applyFilters <- function(
       # browser()
       ## Buscando dados do municipio selecionado
       ef_muns_ef <- ef_muns_ef |>
-        dplyr::filter(quad_cod == sel_period) |>
-        dplyr::collect()
+        dplyr::filter(quad_cod == sel_period)
 
       ## Adicionando SFs aos municípios para o mapa
       ef_muns_ef_sf <- ef_muns_ef |>
@@ -199,7 +201,8 @@ func_applyFilters <- function(
         flag_cmp, ef_cmp, ef_proc_res)
       # graph_inputs_outputs <- NULL
       # }
-      ggiraph::girafe(ggobj = list_graphs_inputs_outputs[[3]])
+      # ggiraph::girafe(ggobj = list_graphs_inputs_outputs[[3]])
+      # list_graphs_inputs_outputs <- NULL
     }
   }
 

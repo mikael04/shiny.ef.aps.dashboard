@@ -10,3 +10,4 @@ $run_dev.*
 ^\.rscignore$
 ^pre$
 ^guides$
+test/tests_scripts$

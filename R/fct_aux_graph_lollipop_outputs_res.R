@@ -34,18 +34,18 @@ func_aux_graph_lollipop_outputs_res <- function(
     cols_names <- colnames(ef_df_br)
 
     # browser()
-    graph_lollipop <- ggplot() +
+    graph_lollipop <- ggplot2::ggplot() +
       ggplot2::theme_minimal() +
-      theme(
+      ggplot2::theme(
         legend.position = "none",
         plot.title = ggtext::element_markdown(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank()
+        panel.grid.major.x = ggplot2::element_blank(),
+        panel.grid.minor.x = ggplot2::element_blank(),
+        panel.grid.minor.y = ggplot2::element_blank()
       ) +
-      xlab("") +
-      ylab("") +
-      labs(
+      ggplot2::xlab("") +
+      ggplot2::ylab("") +
+      ggplot2::labs(
         title = "Saídas"
       )
 
@@ -114,17 +114,17 @@ func_aux_graph_lollipop_outputs_res <- function(
     cols_names <- colnames(ef_df_mun_sel)
     # cols_names
     ## Fazendo ggplot base
-    graph_lollipop <- ggplot() +
+    graph_lollipop <- ggplot2::ggplot() +
       # coord_flip()+
       # hrbrthemes::theme_ipsum() +
       ggplot2::theme_minimal() +
-      theme(
+      ggplot2::theme(
         legend.position = "none",
         plot.title = ggtext::element_markdown()
       ) +
-      xlab("") +
-      ylab("") +
-      labs(
+      ggplot2::xlab("") +
+      ggplot2::ylab("") +
+      ggplot2::labs(
         title = "Saídas"
       )
 
@@ -159,7 +159,7 @@ func_aux_graph_lollipop_outputs_res <- function(
 
         ## Montando gráfico com única camada, pois município já é eficiente e não precisa ser comparado
         graph_lollipop <- graph_lollipop +
-          ggiraph::geom_point_interactive(data = ef_df_mun_sel, aes(x = eixo_x, y = !!as.name(cols_names[i]), tooltip = tooltip_col),
+          ggiraph::geom_point_interactive(data = ef_df_mun_sel, ggplot2::aes(x = eixo_x, y = !!as.name(cols_names[i]), tooltip = tooltip_col),
                                           shape = 21, colour = "black", fill = "#026AA7", size = 4, inherit.aes = F) +
           ggplot2::expand_limits(x = 0, y = 0)
       }
@@ -182,15 +182,15 @@ func_aux_graph_lollipop_outputs_res <- function(
         ## Montando gráfico com três camada, pois município já não é eficiente e precisa ser comparado
         graph_lollipop <- graph_lollipop +
           ggiraph::geom_segment_interactive(data = ef_df_mun_sel,
-                                            aes(x = eixo_x, xend = eixo_x,
+                                            ggplot2::aes(x = eixo_x, xend = eixo_x,
                                                 y = !!as.name(cols_names[i]), yend = (!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])),
                                                 tooltip = tooltip_col),
                                             color = "grey", inherit.aes = F) +
           ggiraph::geom_point_interactive(data = ef_df_mun_sel,
-                                          aes(x = eixo_x, y = !!as.name(cols_names[i]), tooltip = tooltip_col),
+                                          ggplot2::aes(x = eixo_x, y = !!as.name(cols_names[i]), tooltip = tooltip_col),
                                           shape = 21, colour = "black", fill = "#006400", size = 4, inherit.aes = F) +
           ggiraph::geom_point_interactive(data = ef_df_mun_sel,
-                                          aes(x = eixo_x, y = (!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])), tooltip = tooltip_col),
+                                          ggplot2::aes(x = eixo_x, y = (!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])), tooltip = tooltip_col),
                                           shape = 21, colour = "black", fill = "#014c84", size = 4, inherit.aes = F) +
           ggplot2::expand_limits(x = 0, y = 0)
       }
@@ -199,7 +199,7 @@ func_aux_graph_lollipop_outputs_res <- function(
         # browser()
         graph_lollipop <- graph_lollipop +
           ggiraph::geom_point_interactive(data = ef_df_mun_sel,
-                                          aes(x = eixo_x, y = !!as.name(cols_names[i+cols_jump*2+1]), tooltip = tooltip_col),
+                                          ggplot2::aes(x = eixo_x, y = !!as.name(cols_names[i+cols_jump*2+1]), tooltip = tooltip_col),
                                           position = position_jitter(),
                                           shape = 21, colour = "black", fill = "#FF8C00", size = 4, inherit.aes = F) +
           ggplot2::expand_limits(x = 0, y = 0)

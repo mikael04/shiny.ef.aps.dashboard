@@ -56,14 +56,14 @@ func_server_mod_graph_lollipop_inputs_outputs <- function(
   df_arrow <- data.frame(lineend = "round",
                          linejoin = "bevel",
                          y = 7)
-  graph_arrow <- ggplot(df_arrow, aes(x = 1, y = y, xend = 2, yend = y)) +
-    geom_segment(
-      size = 1, arrow = arrow(length = unit(3, "mm"), ends = "last"), arrow.fill = "black",
+  graph_arrow <- ggplot2::ggplot(df_arrow, ggplot2::aes(x = 1, y = y, xend = 2, yend = y)) +
+    ggplot2::geom_segment(
+      size = 1, arrow = grid::arrow(length = grid::unit(3, "mm"), ends = "last"), arrow.fill = "black",
       color = "#0260A6"
     ) +
-    geom_text(aes(x = 1, y = y, label = "Eficiência"),
+    ggplot2::geom_text(ggplot2::aes(x = 1, y = y, label = "Eficiência"),
               hjust = -0.40, vjust = -0.4, size = 5, color = "#014c84") +
-    theme_void()
+    ggplot2::theme_void()
   # graph_arrow
 
   # graph_inputs_outputs

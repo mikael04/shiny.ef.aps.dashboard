@@ -36,7 +36,7 @@ app_server <- function(input, output, session) {
   ### Newcase, atualizando a forma de calcular o gráfico de eficiência para novos dados
   newcase <- T
   ## 0.1.1 Debug ----
-  debug <- T
+  debug <- F
   read_data_rds <- F
   read_data_postgres <- T
   ## Quadrimestres usados para Processos
@@ -129,6 +129,8 @@ app_server <- function(input, output, session) {
     # ef_br_res <- dplyr::tbl(con, "ef_br_res")
     # ef_br_quad <- dplyr::tbl(con, "ef_br_quad")
     data_from_bd <- read_data_postgres
+    initial_gt_tabela_p <- readRDS(file = "data/initial_gt_tabela_p.rds")
+    initial_gt_tabela_r <- readRDS(file = "data/initial_gt_tabela_r.rds")
   }
 
   ## UFs e seus códigos
@@ -157,6 +159,8 @@ app_server <- function(input, output, session) {
   reactive_values$cmp_2 <- FALSE
   ## Variáveis para identificar primeiro acesso
   initial_state <- reactiveVal(T)
+  ## Valores iniciais para react
+  result_graphs <- reactiveVal(NULL)
 
 
   # 2 Gráficos iniciais ----
@@ -482,15 +486,10 @@ app_server <- function(input, output, session) {
     }
   })
 
-  # 3. Aplicar (aplicando filtros reativos) ----
-
-  # result_func <- ExtendedTask$new(function(x, y){
-  #   promises::future_promise({
-  #     Sys.sleep(1)
-  #     x + y
-  #   })
-  # }) |> bslib::bind_task_button("applyFilters")
-  result_graphs <- eventReactive(input$applyFilters, {
+  # 3 Novos gráficos ----
+    ### 3.1 Aplicar (aplicando filtros reativos) ----
+  ## Aplicando filtros
+  observeEvent(input$applyFilters, {
     initial_state(F)
     ## Inputs passados para promises
     input_seletor_ef <- input$seletor_ef
@@ -572,10 +571,8 @@ app_server <- function(input, output, session) {
     }
     ## Se o primeiro resultado for nulo, quer dizer que não foram encontrados dados
     ## para o município
-    ## Debug
-    if(debug){
+    ## Debug #### Limpar #######
       promise <- "debug"
-    }
     # ## Checando para ver se município selecionado possui dados
     # check <- func_check_has_data(df_dados_mun_uf_reg_saud_filter, input$sel_uf_1, input_2, input$type, input$seletor_ef)
     # if(!isTruthy(check)){
@@ -600,25 +597,70 @@ app_server <- function(input, output, session) {
     }else{
       input_2 <- ifelse(input$type == "uf", "NULL",
                         ifelse(input$type == "reg_saude", input$sel_reg_saude_1, input$sel_mun_1))
-      ## Usado para debug
-      if(debug){
-        # Dados tabela
-        gt_tabela <- NULL
-        ## Dados mapa
-        ggiraph_map <- NULL
-        # ## Dados gráfico eficiência
-        list_graphs_inputs_outputs <- NULL
+
+      ## flag de comparação, não iniciada ( == NULL)
+      if(is.null(input$cmp_1)){
+        flag_cmp <- F
+      }else{
+        ## flag de comparação, iniciada mas falsa ( == F)
+        if(!input$cmp_1){
+          flag_cmp <- F
+        }
+        ## flag de comparação, iniciada verdadeira
+        if(input$cmp_1){
+          flag_cmp <- T
+        }
       }
-      ## Senão estiver em modo debug, pegar da resposta da promise
-      if(!debug){
-        # Dados tabela
-        gt_tabela <- result_promise$result()[[1]][[1]]
-        ## Dados mapa
-        ggiraph_map <- result_promise$result()[[2]][[1]]
-        # ## Dados gráfico eficiência
-        list_graphs_inputs_outputs <- result_promise$result()[[3]][[1]]
+      list_dfs <- list(NULL, NULL)
+      ## Alterando títulos
+      if(!input$seletor_ef){
+        title_ef_def <- title_ef_def("Resultados")
+        subtitle_metricas_period = subtitle_metricas_period("no ano")
+        title_period = title_period(sel_period_name_ano)
+      }else{
+        title_ef_def <- title_ef_def("Processos")
+        subtitle_metricas_period = subtitle_metricas_period("no período")
+        title_period = title_period(sel_period_name_quad)
       }
 
+      ## Senão não estiver em modo debug, pegar da resposta da promise
+      if(!debug){
+        library(promises)
+        ## Buscando dados no banco de dados
+        df_mun_cod_ibge_regsaude <- dplyr::tbl(con, "df_mun_cod_ibge_regsaude") |>
+          dplyr::select(-row.names) |>
+          dplyr::collect()
+        ef_muns_proc <- dplyr::tbl(con, "ef_muns_proc") |>
+          dplyr::select(-row.names) |>
+          dplyr::collect()
+        ef_muns_quad_proc <- dplyr::tbl(con, "ef_muns_quad_proc") |>
+          dplyr::select(-row.names) |>
+          dplyr::collect()
+        ef_muns_res <- dplyr::tbl(con, "ef_muns_res") |>
+          dplyr::select(-row.names) |>
+          dplyr::collect()
+        ef_muns_ano_res <- dplyr::tbl(con, "ef_muns_ano_res") |>
+          dplyr::select(-row.names) |>
+          dplyr::collect()
+
+        extra_data <- list(df_mun_cod_ibge_regsaude, ef_muns_proc, ef_muns_quad_proc, ef_muns_res, ef_muns_ano_res)
+
+        title_ef_def <- title_ef_def()
+
+        # browser()
+        ### 3.1.1. Chamando promise ----
+        promises::future_promise({
+          func_applyFilters(
+            tipo_quad, graph_type, title_ef_def,
+            list_dfs, con, data_from_bd,
+            input_seletor_ef, input_type, input_sel_period,
+            input_sel_period_name, input_sel_uf_1, input_sel_uf_2,
+            input_sel_reg_saude_1, input_sel_reg_saude_2,
+            input_sel_mun_1, input_sel_mun_2,
+            flag_cmp, debug, extra_data
+          )
+        }, seed = NULL) %...>% result_graphs()
+      }
       ## Debug promises
       if(debug){
         # list_graphs_inputs_outputs[[1]]
@@ -644,30 +686,6 @@ app_server <- function(input, output, session) {
                      "Input sel mun 1: ", input_sel_mun_1, "\n", "Input sel mun 2: ", input_sel_mun_2, "\n",
                      "Flag cmp: ", flag_cmp))
         }
-        ## flag de comparação, não iniciada ( == NULL)
-        if(is.null(input$cmp_1)){
-          flag_cmp <- F
-        }else{
-          ## flag de comparação, iniciada mas falsa ( == F)
-          if(!input$cmp_1){
-            flag_cmp <- F
-          }
-          ## flag de comparação, iniciada verdadeira
-          if(input$cmp_1){
-            flag_cmp <- T
-          }
-        }
-        list_dfs <- list(NULL, NULL)
-        ## Alterando títulos
-        if(!input$seletor_ef){
-          title_ef_def <- title_ef_def("Resultados")
-          subtitle_metricas_period = subtitle_metricas_period("no ano")
-          title_period = title_period(sel_period_name_ano)
-        }else{
-          title_ef_def <- title_ef_def("Processos")
-          subtitle_metricas_period = subtitle_metricas_period("no período")
-          title_period = title_period(sel_period_name_quad)
-        }
         ## Gerando novos gráficos
         result_func <- func_applyFilters(
           tipo_quad, graph_type, title_ef_def(),
@@ -676,14 +694,7 @@ app_server <- function(input, output, session) {
           input_sel_period_name, input_sel_uf_1, input_sel_uf_2,
           input_sel_reg_saude_1, input_sel_reg_saude_2,
           input_sel_mun_1, input_sel_mun_2,
-          flag_cmp
-          # func_server_mod_tabela_ef, func_order_by_ef_sel,
-          # func_server_mod_mapa,
-          # func_get_ef_mun_data,
-          # func_server_mod_graph_lollipop_inputs_outputs,
-          # func_aux_graph_lollipop_input_proc_1, func_aux_graph_lollipop_input_proc_2,
-          # func_aux_graph_lollipop_outputs_proc_2,
-          # func_create_tooltip_ef
+          flag_cmp, debug, extra_data = NULL
         )
 
 
@@ -695,27 +706,28 @@ app_server <- function(input, output, session) {
         list_graphs_inputs_outputs <- result_func[[3]][[1]]
         flag_cmp = F
         ef_df_cmp = NULL
+
+        list_graphs_calc <- list(gt_tabela, ggiraph_map, list_graphs_inputs_outputs)
+        result_graphs(list_graphs_calc)
       }
-      shinyalert::closeAlert()
-      list_graphs_calc <- list(gt_tabela, ggiraph_map, list_graphs_inputs_outputs)
     }
   })
 
   observeEvent(result_graphs(), {
-    browser()
     ## 3.1 Gráficos ----
     ## 3.1.1 Tabela do município ----
-    gt_tabela <- result_graphs()[[1]]
+    gt_tabela <- result_graphs()[[1]][[1]]
     mod_tabela_ef_server("tabela_ef_1", initial_state(), gt_tabela)
     ## 3.1.2 Mapa da região de saúde (ef_df_reg_saude_sel) ----
-    ggiraph_map <- result_graphs()[[2]]
+    ggiraph_map <- result_graphs()[[2]][[1]]
     mod_mapa_server("mapa_1", initial_state(), ggiraph_map)
     ## 3.1.3 Gráfico de Inputs e outputs ----
     ### Inputs e outputs
-    list_graphs_inputs_outputs <- result_graphs()[[3]]
+    list_graphs_inputs_outputs <- result_graphs()[[3]][[1]]
     mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
                                              initial_state(), ef_proc_res,
                                              list_graphs_inputs_outputs, newcase)
+    shinyalert::closeAlert()
     # browser()
   })
   # ### 3.1.1 Tabela do município ----
@@ -732,7 +744,7 @@ app_server <- function(input, output, session) {
   # mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
   #                                          initial_state(), ef_proc_res,
   #                                          result_graphs()[3], newcase)
-  future::plan("multisession")
+  future::plan("multicore")
   # extTask_test <- ExtendedTask$new(function(
   #   df, uf_sel, mun_regsaud_sel, type, ef_proc_res
   # ) {

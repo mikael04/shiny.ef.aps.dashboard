@@ -28,17 +28,17 @@ func_aux_graph_lollipop_input_res_2 <- function(
   in_out_flag <- T
 
   ## Fazendo ggplot base
-  graph_lollipop <- ggplot() +
+  graph_lollipop <- ggplot2::ggplot() +
     ggplot2::theme_minimal() +
-    theme(
+    ggplot2::theme(
       legend.position = "none",
       plot.title = ggtext::element_markdown(),
-      panel.grid.major.x = element_blank(),
-      panel.grid.minor.x = element_blank(),
-      panel.grid.minor.y = element_blank()
+      panel.grid.major.x = ggplot2::element_blank(),
+      panel.grid.minor.x = ggplot2::element_blank(),
+      panel.grid.minor.y = ggplot2::element_blank()
     ) +
-    xlab("") +
-    ylab("")
+    ggplot2::xlab("") +
+    ggplot2::ylab("")
 
   ## Brasil, gráfico inicial
   if(graph_type == 0){

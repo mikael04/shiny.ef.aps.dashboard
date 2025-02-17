@@ -24,7 +24,6 @@ mod_tabela_ef_server <- function(id, initial_state, gt_tabela, ef_proc_res){
     if(teste_interno){
       df_tabela <- ef_df_ufs
     }
-    # browser()
     if(initial_state){
       # browser()
       ## ef_proc_res = T -> Eficiência de resultados, F -> Eficiência de processos

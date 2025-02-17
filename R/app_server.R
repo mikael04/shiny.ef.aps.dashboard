@@ -490,7 +490,7 @@ app_server <- function(input, output, session) {
   #     x + y
   #   })
   # }) |> bslib::bind_task_button("applyFilters")
-  observeEvent(input$applyFilters, {
+  result_graphs <- eventReactive(input$applyFilters, {
     initial_state(F)
     ## Inputs passados para promises
     input_seletor_ef <- input$seletor_ef
@@ -696,33 +696,42 @@ app_server <- function(input, output, session) {
         flag_cmp = F
         ef_df_cmp = NULL
       }
-
-      ### 3.1.1 Tabela do município ----
-      ## Colocada aqui, porque depois das tranformações surgiram problemas no pivot_wider
-      mod_tabela_ef_server("tabela_ef_1", F, gt_tabela)
-
-      # browser()
-      ##  3.1.2 Mapa da região de saúde (ef_df_reg_saude_sel) ----
-      mod_mapa_server("mapa_1", initial_state = F, ggiraph_map)
-
-      # browser()
-      ## 3.1.3 Gráfico de Inputs e outputs ----
-      ### Inputs e outputs
-      mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
-                                               initial_state = F, ef_proc_res,
-                                               list_graphs_inputs_outputs, newcase)
       shinyalert::closeAlert()
-
-      result_func$invoke(tipo_quad, graph_type, title_ef_def,
-                         list_dfs, con, data_from_bd,
-                         input_seletor_ef, input_type, input_sel_period,
-                         input_sel_period_name, input_sel_uf_1, input_sel_uf_2,
-                         input_sel_reg_saude_1, input_sel_reg_saude_2,
-                         input_sel_mun_1, input_sel_mun_2,
-                         flag_cmp, func_order_by_ef_sel)
-      # result_func$invoke(1, 2)
+      list_graphs_calc <- list(gt_tabela, ggiraph_map, list_graphs_inputs_outputs)
     }
   })
+
+  observeEvent(result_graphs(), {
+    browser()
+    ## 3.1 Gráficos ----
+    ## 3.1.1 Tabela do município ----
+    gt_tabela <- result_graphs()[[1]]
+    mod_tabela_ef_server("tabela_ef_1", initial_state(), gt_tabela)
+    ## 3.1.2 Mapa da região de saúde (ef_df_reg_saude_sel) ----
+    ggiraph_map <- result_graphs()[[2]]
+    mod_mapa_server("mapa_1", initial_state(), ggiraph_map)
+    ## 3.1.3 Gráfico de Inputs e outputs ----
+    ### Inputs e outputs
+    list_graphs_inputs_outputs <- result_graphs()[[3]]
+    mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+                                             initial_state(), ef_proc_res,
+                                             list_graphs_inputs_outputs, newcase)
+    # browser()
+  })
+  # ### 3.1.1 Tabela do município ----
+  # ## Colocada aqui, porque depois das tranformações surgiram problemas no pivot_wider
+  # mod_tabela_ef_server("tabela_ef_1", initial_state(), result_graphs()[1])
+  #
+  # # browser()
+  # ##  3.1.2 Mapa da região de saúde (ef_df_reg_saude_sel) ----
+  # mod_mapa_server("mapa_1", initial_state(), result_graphs()[2])
+  #
+  # # browser()
+  # ## 3.1.3 Gráfico de Inputs e outputs ----
+  # ### Inputs e outputs
+  # mod_graph_lollipop_inputs_outputs_server("graph_lollipop_inputs_outputs_1",
+  #                                          initial_state(), ef_proc_res,
+  #                                          result_graphs()[3], newcase)
   future::plan("multisession")
   # extTask_test <- ExtendedTask$new(function(
   #   df, uf_sel, mun_regsaud_sel, type, ef_proc_res

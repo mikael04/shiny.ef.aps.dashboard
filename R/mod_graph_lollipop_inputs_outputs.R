@@ -18,7 +18,7 @@ mod_graph_lollipop_inputs_outputs_ui <- function(id){
 #' graph_lollipop_inputs_outputs Server Functions
 #'
 #' @noRd
-mod_graph_lollipop_inputs_outputs_server <- function(id, initial_state, ef_proc_res, list_graphs_inputs_outputs_2, newcase){
+mod_graph_lollipop_inputs_outputs_server <- function(id, initial_state, ef_proc_res, list_graphs_inputs_outputs, newcase){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     teste_interno <- F
@@ -41,11 +41,11 @@ mod_graph_lollipop_inputs_outputs_server <- function(id, initial_state, ef_proc_
     if(!initial_state){
       # browser()
       ## Se for NULL, significa que estamos vendo região de saúde ou UF, não apresenta gráfico de eficiência
-      if(is.null(list_graphs_inputs_outputs_2)){
+      if(is.null(list_graphs_inputs_outputs)){
         graf_inputs_outputs <- NULL
         ## Caso contrário, caso seja selecionado o município, apresenta o gráfico de eficiência
       }else{
-        graf_ggplot_inputs_outputs <- func_aux_lollipop_patchwork(list_graphs_inputs_outputs_2, newcase)
+        graf_ggplot_inputs_outputs <- func_aux_lollipop_patchwork(list_graphs_inputs_outputs, newcase)
         graf_inputs_outputs <- ggiraph::girafe(ggobj = graf_ggplot_inputs_outputs,
                                                width_svg = 10, height_svg = 3)
       }

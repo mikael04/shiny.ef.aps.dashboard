@@ -5,16 +5,16 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-func_aux_lollipop_patchwork <- function(list_graphs_inputs_outputs_2, newcase){
+func_aux_lollipop_patchwork <- function(list_graphs_inputs_outputs, newcase){
   # browser()
   if(F){
-    list_graphs_inputs_outputs_2 <- initial_list_graphs_inputs_outputs
+    list_graphs_inputs_outputs <- initial_list_graphs_inputs_outputs
   }
   if(newcase){
-    graph_input_1 <- list_graphs_inputs_outputs_2[[1]]
+    graph_input_1 <- list_graphs_inputs_outputs[[1]]
     graph_input_2 <- NULL
-    graph_arrow <- list_graphs_inputs_outputs_2[[2]]
-    graph_lollipop_outputs <- list_graphs_inputs_outputs_2[[3]]
+    graph_arrow <- list_graphs_inputs_outputs[[2]]
+    graph_lollipop_outputs <- list_graphs_inputs_outputs[[3]]
 
     ## Design novo [2], input_1 + arrow + outputs ----
     design <- "ACCDDDDD"
@@ -24,10 +24,10 @@ func_aux_lollipop_patchwork <- function(list_graphs_inputs_outputs_2, newcase){
                                  theme=theme(plot.title=element_text(hjust=0.1, vjust=-7.5)))
 
   }else{
-    graph_input_1 <- list_graphs_inputs_outputs_2[[1]]
-    graph_input_2 <- list_graphs_inputs_outputs_2[[2]]
-    graph_arrow <- list_graphs_inputs_outputs_2[[3]]
-    graph_lollipop_outputs <- list_graphs_inputs_outputs_2[[4]]
+    graph_input_1 <- list_graphs_inputs_outputs[[1]]
+    graph_input_2 <- list_graphs_inputs_outputs[[2]]
+    graph_arrow <- list_graphs_inputs_outputs[[3]]
+    graph_lollipop_outputs <- list_graphs_inputs_outputs[[4]]
 
     ## Design novo [1], input_1 + input_2 + arrow + outputs ----
     design <- "ABCCDDDDD"

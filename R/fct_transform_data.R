@@ -24,6 +24,7 @@ source("R/fct_transform_data_to_download.R")
 source("R/fct_update_data_PostgreSQL.R")
 source("R/fct_test_cols_data.R")
 source("R/fct_test_duplicate_data.R")
+source("R/fct_set_label_reais.R")
 library(ggplot2)
 library(patchwork)
 

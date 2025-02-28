@@ -60,7 +60,7 @@ func_transform_data <- function(verbose, overwrite_data, update_db){
     uf_sf <- sf::read_sf(here::here("data-raw/dados-espaciais/uf_sf.shp")) |>
       dplyr::select(cod_stt, geometry)
     ## Regiões de saúde
-    reg_saude_sf <- sf::read_sf(here::("data-raw/shapefile-reg-saude/br_regionais_simplificado/BR_Regionais.shp")) |>
+    reg_saude_sf <- sf::read_sf(here::here("data-raw/shapefile-reg-saude/br_regionais_simplificado/BR_Regionais.shp")) |>
       dplyr::rename(nome_reg_saude = nome, estado_id_reg_saude = est_id)
 
     ## Municípios, códigos e capitais ----

@@ -13,11 +13,11 @@ source("R/utils_environment.R")
 env_settings <- utils_environment_config()
 
 ## Refazendo gráficos iniciais
-cat("Refazendo gráficos iniciais")
+cat("Refazendo gráficos iniciais\n")
 source("R/fct_transform_data.R")
 func_transform_data(verbose = F, overwrite_data = T, update_db = F)
 
-cat("Iniciando servidor")
+cat("\nIniciando servidor\n")
 ## Se estiver rodando em modo dev, setar a porta pelo argumento da linha de comando
 if(shiny::isTruthy(args) && args[1] == "dev"){
   print("app.R in dev mode")

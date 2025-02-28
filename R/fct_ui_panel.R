@@ -60,6 +60,15 @@ func_ui_panel <- function(session, id){
             # ),
             ## Botões aplicar/reinicar ----
             div(
+              div(class="col-6 text-center botaoAplicar",
+                  shinyWidgets::actionBttn(
+                    inputId = "applyFilters",
+                    label = HTML("Aplicar filtros"),
+                    size = "md",
+                    style = "jelly",
+                    color = "default"
+                  )
+              ),
               class="row botoes-aplicar-resetar",
               div(class="col-6 text-center botaoResetar",
                   shinyWidgets::actionBttn(
@@ -68,15 +77,6 @@ func_ui_panel <- function(session, id){
                     size = "md",
                     style = "jelly",
                     color = "danger"
-                  )
-              ),
-              div(class="col-6 text-center botaoAplicar",
-                  shinyWidgets::actionBttn(
-                    inputId = "applyFilters",
-                    label = HTML("Aplicar filtros"),
-                    size = "md",
-                    style = "jelly",
-                    color = "default"
                   )
               ),
             ),

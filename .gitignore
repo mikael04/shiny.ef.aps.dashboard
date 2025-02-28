@@ -7,4 +7,5 @@
 .Renviron
 inst/golem-config.yml
 man/dados-sensiveis.txt
+data-raw/*
 data/*

@@ -9,7 +9,7 @@
 func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, input_sel_period_name,
                                    nome_area, nome_area_cmp,
                                    in_out_flag, in_out_names, in_out_names_clean,
-                                   cols_names, cols_jump){
+                                   cols_names, cols_jump, col_plus_minus, money){
   if(F){
     ef_df_tooltip <- ef_df_mun_sel
     # ef_df_tooltip <- ef_df_br
@@ -38,12 +38,16 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
           "Índice de ", ifelse(in_out_flag == T, "entrada: ",  "saída: "),
           "<b>", in_out_names_clean[first_col], "</b>", ".\n",
           "Valor atual", ifelse(graph_type == 2, ": ", " médio: "),
-          "<b>", round(!!as.name(cols_names[i]), 2), "</b>", "\n",
-          "A região <b>já é eficiente nesta área.</br>"),
+          "<b>", ifelse(money, func_set_label_reais(round(!!as.name(cols_names[i]), 2)), round(!!as.name(cols_names[i]), 2)), "</b>", "\n",
+          "<b>Não há necessidade de redução de despesa para se tornar eficiente.</b></br>"),
         eixo_x = in_out_names[first_col])
   }
   ## ef == F se não for eficiente
   if(!ef){
+    ef_df_tooltip <- ef_df_tooltip |>
+      ## Se col_plus_minus == true, indica que devo somar o valor para chegar no valor eficiente,
+      ## se false significa que tenho que subtrair
+      dplyr::mutate(val_alc_ef = ifelse(col_plus_minus, (!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])), (!!as.name(cols_names[i])-!!as.name(cols_names[i+cols_jump]))))
     ## in_out_names i-3, temos 3 colunas iniciais, região geográfica, ef_bcc, quad_cod
     ef_return <- ef_df_tooltip |>
       dplyr::mutate(
@@ -52,9 +56,9 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
           "Período: ", "<b>", input_sel_period_name, "</b>", "\n",
           "Índice de ", ifelse(in_out_flag == T, "entrada: ",  "saída: "),
           "<b>", in_out_names_clean[first_col], "</b>", ".\n",
-          "Valor para alcançar eficiência: ", "<b>", round((!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])), 2), "</b>", "\n",
+          "Valor para alcançar eficiência: ", "<b>", ifelse(money, func_set_label_reais(round(val_alc_ef, 2)), round(val_alc_ef, 2)), "</b>", "\n",
           "Valor atual", ifelse(graph_type == 2, ": ", " médio: "),
-          "<b>", round(!!as.name(cols_names[i]), 2), "</b>", "\n"),
+          "<b>", ifelse(money, func_set_label_reais(round(!!as.name(cols_names[i]), 2)), round(!!as.name(cols_names[i]), 2)), "</b>", "\n"),
         eixo_x = in_out_names[first_col])
   }
   if(flag_cmp){
@@ -64,7 +68,7 @@ func_create_tooltip_ef <- function(ef_df_tooltip, graph_type, ef, flag_cmp, i, i
           tooltip_col, "\n",
           "Município de comparação: ", "<b>", nome_area_cmp, "</b>", "\n",
           "Valor atual", ifelse(graph_type == 2, ": ", " médio: "),
-          "<b>", round(!!as.name(cols_names[i+cols_jump*2+1]), 2), "</b>", "\n"
+          "<b>", ifelse(money, func_set_label_reais(round(!!as.name(cols_names[i+cols_jump*2+1]))), round(!!as.name(cols_names[i+cols_jump*2+1]), 2)), "</b>", "\n"
         )
       )
 

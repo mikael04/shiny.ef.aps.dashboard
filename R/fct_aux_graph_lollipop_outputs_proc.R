@@ -68,7 +68,8 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
         ef_df_br, graph_type = 0, ef = F, flag_cmp = F, i, "3° Quad/2023",
         "Brasil", "",
         in_out_flag, output_names, output_names_clean,
-        cols_names, cols_jump)
+        cols_names, cols_jump,
+        col_plus_minus = T, money = F)
 
       graph_lollipop <- graph_lollipop +
         ggiraph::geom_segment_interactive(data = ef_df_br, aes(x = eixo_x, xend = eixo_x,
@@ -150,7 +151,8 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
         ef_df_mun_sel <- func_create_tooltip_ef(
           ef_df_mun_sel, graph_type, ef = T, flag_cmp, i, input_sel_period_name,
           ef_df_mun_sel$nome_area, ef_df_mun_sel$cmp_nome_area,
-          in_out_flag, output_names, output_names_clean, cols_names, cols_jump)
+          in_out_flag, output_names, output_names_clean, cols_names, cols_jump,
+          col_plus_minus = T, money = F)
 
         ## Montando gráfico com única camada, pois município já é eficiente e não precisa ser comparado
         graph_lollipop <- graph_lollipop +
@@ -172,7 +174,8 @@ func_aux_graph_lollipop_outputs_proc <- function(graph_type, input_sel_period_na
         ef_df_mun_sel <- func_create_tooltip_ef(
           ef_df_mun_sel, graph_type, ef = F, flag_cmp, i, input_sel_period_name,
           ef_df_mun_sel$nome_area, ef_df_mun_sel$cmp_nome_area,
-          in_out_flag, output_names, output_names_clean, cols_names, cols_jump)
+          in_out_flag, output_names, output_names_clean, cols_names, cols_jump,
+          col_plus_minus = T, money = F)
 
         ## Montando gráfico com três camada, pois município já não é eficiente e precisa ser comparado
         graph_lollipop <- graph_lollipop +

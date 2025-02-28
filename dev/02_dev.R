@@ -77,6 +77,7 @@ golem::add_fct("aux_graph_lollipop_input_res_2", with_test = F)
 golem::add_fct("aux_graph_lollipop_outputs_res", with_test = F)
 golem::add_fct("aux_lollipop_patchwork", with_test = F)
 golem::add_fct("create_tooltip_ef", with_test = F)
+golem::add_fct("set_label_reais", with_test = F)
 ### Server UI
 golem::add_fct("selector_type_1", with_test = F)
 golem::add_fct("selector_type_2", with_test = F)

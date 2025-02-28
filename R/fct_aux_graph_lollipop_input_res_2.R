@@ -22,7 +22,7 @@ func_aux_graph_lollipop_input_res_2 <- function(
 
   # browser()
   ## Nomes dos índices
-  input_names <- c("Despesas em APS \n por hab coberto", "Equipe da APS \npor 3.500 hab cob")
+  input_names <- c(" Despesa mensal por equipe (R$)", "Equipe da APS \npor 3.500 hab cob")
   input_names_clean <- gsub("\n", "", input_names)
   ## flag input para tooltip
   in_out_flag <- T

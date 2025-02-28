@@ -23,7 +23,7 @@ func_aux_graph_lollipop_input_res_1 <- function(
 
   # browser()
   ## Nomes dos índices
-  input_names <- c("Despesas em APS \n por hab coberto (em R$)", "Equipe da APS \npor 3.500 hab cob")
+  input_names <- c(" Despesa mensal \n por equipe (R$)", "Equipe da APS \npor 3.500 hab cob")
   input_names_clean <- gsub("\n", "", input_names)
   ## flag input para tooltip
   in_out_flag <- T
@@ -56,7 +56,7 @@ func_aux_graph_lollipop_input_res_1 <- function(
       ef_df_br, graph_type = 0, ef = F, flag_cmp = F, i, input_sel_period_name,
       "Brasil", "",
       in_out_flag, input_names, input_names_clean,
-      cols_names, cols_jump)
+      cols_names, cols_jump, col_plus_minus = F, money = T)
 
     ## Gráfico
     graph_lollipop_desp <- graph_lollipop +
@@ -113,7 +113,8 @@ func_aux_graph_lollipop_input_res_1 <- function(
       ef_df_mun_sel <- func_create_tooltip_ef(
         ef_df_mun_sel, graph_type, ef = T, flag_cmp, i, input_sel_period_name,
         ef_df_mun_sel$nome_mun, ef_df_mun_sel$cmp_nome_mun,
-        in_out_flag, input_names, input_names_clean, cols_names, cols_jump)
+        in_out_flag, input_names, input_names_clean, cols_names, cols_jump,
+        col_plus_minus = F, money = T)
 
       ## Gráfico
       graph_lollipop_desp <- graph_lollipop +
@@ -134,16 +135,17 @@ func_aux_graph_lollipop_input_res_1 <- function(
       ef_df_mun_sel <- func_create_tooltip_ef(
         ef_df_mun_sel, graph_type, ef = F, flag_cmp, i, input_sel_period_name,
         ef_df_mun_sel$nome_mun, ef_df_mun_sel$cmp_nome_mun,
-        in_out_flag, input_names, input_names_clean, cols_names, cols_jump)
+        in_out_flag, input_names, input_names_clean, cols_names, cols_jump,
+        col_plus_minus = F, money = T)
 
       ## Gráfico
       graph_lollipop_desp <- graph_lollipop +
         ggiraph::geom_segment_interactive(data = ef_df_mun_sel, aes(x = eixo_x, xend = eixo_x,
-                                                                    y = !!as.name(cols_names[i]), yend = (!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])), tooltip = tooltip_col),
+                                                                    y = !!as.name(cols_names[i]), yend = (!!as.name(cols_names[i])-!!as.name(cols_names[i+cols_jump])), tooltip = tooltip_col),
                                           color = "grey", inherit.aes = F) +
         ggiraph::geom_point_interactive(data = ef_df_mun_sel, aes(x = eixo_x, y = !!as.name(cols_names[i]), tooltip = tooltip_col),
                                         shape = 21, colour = "black", fill = "#006400", size = 4, inherit.aes = F) +
-        ggiraph::geom_point_interactive(data = ef_df_mun_sel, aes(x = eixo_x, y = (!!as.name(cols_names[i])+!!as.name(cols_names[i+cols_jump])), tooltip = tooltip_col),
+        ggiraph::geom_point_interactive(data = ef_df_mun_sel, aes(x = eixo_x, y = (!!as.name(cols_names[i])-!!as.name(cols_names[i+cols_jump])), tooltip = tooltip_col),
                                         shape = 21, colour = "black", fill = "#014c84", size = 4, inherit.aes = F) +
         ggplot2::expand_limits(x = 0, y = 0)
       # ggiraph::girafe(ggobj = graph_lollipop_desp)

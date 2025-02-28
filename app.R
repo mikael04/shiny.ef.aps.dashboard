@@ -14,7 +14,8 @@ env_settings <- utils_environment_config()
 
 ## Refazendo gráficos iniciais
 cat("Refazendo gráficos iniciais")
-func_transform_data()
+source("R/fct_transform_data.R")
+func_transform_data(verbose = F, overwrite_data = T, update_db = F)
 
 cat("Iniciando servidor")
 ## Se estiver rodando em modo dev, setar a porta pelo argumento da linha de comando

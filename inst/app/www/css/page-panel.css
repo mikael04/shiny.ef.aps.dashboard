@@ -21,6 +21,19 @@
   padding-left: 1.5vw;
   padding-right: 1.5vw;
 }
+/* Alterando botões de aplicar, resetar e download */
+#applyFilters{
+  font-size: 1.2rem !important;
+  text-transform: none !important;
+}
+#resetFilters{
+  font-size: 1rem !important;
+  text-transform: none !important;
+}
+#downloadData{
+  font-size: 1rem !important;
+  text-transform: none !important;
+}
 /* Cor da seleção inicial de eficiência */
 #right{
   color: orange;

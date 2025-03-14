@@ -60,36 +60,36 @@ func_ui_panel <- function(session, id){
             # ),
             ## Botões aplicar/reinicar ----
             div(
-              div(class="col-6 text-center botaoAplicar",
-                  shinyWidgets::actionBttn(
-                    inputId = "applyFilters",
-                    label = HTML("Aplicar filtros"),
-                    size = "md",
-                    style = "jelly",
-                    color = "default"
-                  )
-              ),
-              class="row botoes-aplicar-resetar",
+              class="text-center botaoAplicar",
+              shinyWidgets::actionBttn(
+                inputId = "applyFilters",
+                label = HTML("Aplicar filtros"),
+                size = "lg",
+                style = "jelly",
+                color = "default"
+              )
+            ),
+            br(),
+            div(
+              class="row botoes-resetar-download",
               div(class="col-6 text-center botaoResetar",
                   shinyWidgets::actionBttn(
                     inputId = "resetFilters",
                     label = "Reiniciar gráficos",
-                    size = "md",
-                    style = "jelly",
+                    size = "sm",
+                    style = "material-flat",
                     color = "danger"
                   )
               ),
-            ),
-            br(),
-            div(
-              class="text-center download",
-              shinyWidgets::actionBttn(
-                inputId = "downloadData",
-                label = "Baixar os dados",
-                style = "material-flat",
-                size = "md",
-                color = "success"
-              )
+              div(class="col-6 text-center botaoDownload",
+                  shinyWidgets::actionBttn(
+                    inputId = "downloadData",
+                    label = "Baixar os dados",
+                    style = "material-flat",
+                    size = "sm",
+                    color = "success"
+                  )
+              ),
             ),
             br()
           )
